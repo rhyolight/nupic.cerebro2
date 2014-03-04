@@ -9,7 +9,7 @@ var ThreeDVisualization = Visualization.extend(function(base) {
 		/* Public */
 
 		setupCells: function(numX, numY, numZ) {
-			var padding = 10,
+			var padding = 50,
 			    originX = -(numX * padding) / 2,
 			    originY = -(numY * padding) / 2,
 			    originZ = -(numZ * padding) / 2;
