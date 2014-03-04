@@ -60,7 +60,8 @@ var Visualization = Fiber.extend(function() {
 
 		_initControls: function() {
 			var camera = this.camera,
-			    controls = new THREE.TrackballControls(camera);
+			    renderer = this.renderer,
+			    controls = new THREE.TrackballControls(camera, renderer.domElement);
 
 			controls.rotateSpeed = 1.0;
 			controls.zoomSpeed = 1.2;
