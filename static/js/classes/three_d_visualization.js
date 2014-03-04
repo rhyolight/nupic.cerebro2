@@ -3,19 +3,10 @@ var ThreeDVisualization = Visualization.extend(function(base) {
 		init: function(container) {
 			base.init(container);
 
-			this._setupGUI();
 			this._addParticles();
 		},
 
 		/* Private */
-
-		_setupGUI: function() {
-			var gui = this.gui;
-
-			gui.add(this.camera.position, 'x', -100, 100);
-			gui.add(this.camera.position, 'y', -100, 100);
-			gui.add(this.camera.position, 'z', 0, 600);
-		},
 
 		_addParticles: function() {
 			var particleCount = 10000,
