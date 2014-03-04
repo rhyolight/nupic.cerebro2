@@ -1,19 +1,30 @@
 var Visualization = Fiber.extend(function() {
 	return {
-		init: function(container) {
+		init: function(container, history) {
 			this.container = container;
+			this.history = history;
 
 			this.renderer = null;
 		    this.scene = null;
 		    this.camera = null;
 			this.controls = null;
 			this.stats = null;
-			this.gui = null;
 
+			this.gui = null;
+			this.guiIteration = null;
+
+			this.iteration = 0;
+		},
+
+		setup: function() {
 			this._initScene();
 			this._initControls();
 			this._initStats();
 			this._initGUI();
+
+			this.historyUpdated();
+
+			return this;
 		},
 
 		/* Public */
@@ -30,7 +41,24 @@ var Visualization = Fiber.extend(function() {
 			requestAnimationFrame(this.render.bind(this));
 		},
 
+		historyUpdated: function() {
+			var num = this.history.length(),
+				guiIteration = this.guiIteration;
+
+			var min = Number(num > 0),
+			    max = num;
+
+			guiIteration.__min = min;
+			guiIteration.__max = max;
+
+			if (guiIteration.getValue() === 0) {
+				guiIteration.setValue(min);
+			}
+		},
+
 		/* Private */
+
+		_update: function() {},
 
 		_initScene: function() {
 			var container = this.container,
@@ -97,9 +125,9 @@ var Visualization = Fiber.extend(function() {
 			domElement.addClass("controls");
 			this.container.append(domElement);
 
-			this.gui = gui;
-		},
+			this.guiIteration = gui.add(this, 'iteration').step(1);
 
-		_update: function() {}
+			this.gui = gui;
+		}
 	};
 });

@@ -1,23 +1,47 @@
 var ThreeDVisualization = Visualization.extend(function(base) {
 	return {
-		init: function(container) {
-			base.init(container);
+		init: function(container, history) {
+			base.init(container, history);
 
-			this.numX = 50;
-			this.numY = 8;
-			this.numZ = 50;
 			this.particleSystem = null;
-
-			this._setupGUI();
+			this.snapshot = null;
+			this.lastIteration = null;
 		},
 
-		/* Public */
+		setup: function() {
+			base.setup();
 
-		setupCells: function() {
+			return this;
+		},
+
+		/* Private */
+
+		_iterationUpdated: function() {
+			this.snapshot = this.history.getSnapshotAtIndex(this.iteration - 1);
+
+			if (this.snapshot) this._setupCells();
+			else this._clearCells();
+		},
+
+		_update: function() {
+			base._update();
+
+			if (this.lastIteration != this.iteration) {
+				this._iterationUpdated();
+				this.lastIteration = this.iteration;
+			}
+		},
+
+		_clearCells: function() {
+			if (this.particleSystem) this.scene.remove(this.particleSystem);
+		},
+
+		_setupCells: function() {
 			var padding = 50,
-				numX = this.numX,
-				numY = this.numY,
-				numZ = this.numZ,
+			    dimensions = this.snapshot.getModelDimensions(),
+				numX = dimensions[0],
+				numY = dimensions[1],
+				numZ = dimensions[2],
 			    originX = -(numX * padding) / 2,
 			    originY = -(numY * padding) / 2,
 			    originZ = -(numZ * padding) / 2;
@@ -49,24 +73,10 @@ var ThreeDVisualization = Visualization.extend(function(base) {
 				}
 			}
 
-			if (this.particleSystem) this.scene.remove(this.particleSystem);
+			this._clearCells();
 			this.scene.add(particleSystem);
 
 			this.particleSystem = particleSystem;
-		},
-
-		/* Private */
-
-		_setupGUI: function() {
-			var gui = this.gui;
-
-			var update = _.bind(function() {
-				this.setupCells();
-			}, this);
-
-			gui.add(this, 'numX', 1, 100).step(1).onChange(update);
-			gui.add(this, 'numY', 1, 100).step(1).onChange(update);
-			gui.add(this, 'numZ', 1, 100).step(1).onChange(update);
 		}
 	};
 });
