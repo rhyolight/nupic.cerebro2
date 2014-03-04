@@ -6,10 +6,12 @@ var Visualization = Fiber.extend(function() {
 			this.renderer = null;
 		    this.scene = null;
 		    this.camera = null;
+			this.controls = null;
 			this.stats = null;
 			this.gui = null;
 
 			this._initScene();
+			this._initControls();
 			this._initStats();
 			this._initGUI();
 		},
@@ -20,6 +22,7 @@ var Visualization = Fiber.extend(function() {
 			if (this.stats) this.stats.begin();
 
 			this._update();
+			this.controls.update();
 			this.renderer.render(this.scene, this.camera);
 
 			if (this.stats) this.stats.end();
@@ -51,6 +54,25 @@ var Visualization = Fiber.extend(function() {
 			this.renderer = renderer;
 			this.camera = camera;
 			this.scene = scene;
+		},
+
+		_initControls: function() {
+			var camera = this.camera,
+			    controls = new THREE.TrackballControls(camera);
+
+			controls.rotateSpeed = 1.0;
+			controls.zoomSpeed = 1.2;
+			controls.panSpeed = 0.8;
+
+			controls.noZoom = false;
+			controls.noPan = false;
+
+			controls.staticMoving = true;
+			controls.dynamicDampingFactor = 0.3;
+
+			controls.keys = [65, 83, 68];
+
+			this.controls = controls;
 		},
 
 		_initStats: function() {
