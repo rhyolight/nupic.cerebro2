@@ -1,3 +1,3 @@
 var container = $('#container');
 
-var visualization = new Visualization(container);
+var visualization = new ThreeDVisualization(container);
