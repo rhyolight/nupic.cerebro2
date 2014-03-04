@@ -125,7 +125,7 @@ var Visualization = Fiber.extend(function() {
 			domElement.addClass("controls");
 			this.container.append(domElement);
 
-			this.guiIteration = gui.add(this, 'iteration').step(1);
+			this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1);
 
 			this.gui = gui;
 		}
