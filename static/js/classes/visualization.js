@@ -1,6 +1,9 @@
 var Visualization = Fiber.extend(function() {
 	return {
-		init: function(container) {
+		init: function(container, width, height) {
+			this.width = width || 400;
+			this.height = height || 300;
+
 			this.container = container;
 
 			this.renderer = null;
@@ -67,13 +70,9 @@ var Visualization = Fiber.extend(function() {
 		/* Private */
 
 		_initScene: function() {
-			// set the scene size
-			var WIDTH = 400,
-			  HEIGHT = 300;
-
 			// set some camera attributes
 			var VIEW_ANGLE = 45,
-			  ASPECT = WIDTH / HEIGHT,
+			  ASPECT = this.width / this.height,
 			  NEAR = 0.1,
 			  FAR = 10000;
 
@@ -97,7 +96,7 @@ var Visualization = Fiber.extend(function() {
 			camera.position.z = 300;
 
 			// start the renderer
-			renderer.setSize(WIDTH, HEIGHT);
+			renderer.setSize(this.width, this.height);
 
 			// attach the render-supplied DOM element
 			this.container.append(renderer.domElement);
