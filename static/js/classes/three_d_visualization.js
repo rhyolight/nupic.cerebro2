@@ -3,23 +3,38 @@ var ThreeDVisualization = Visualization.extend(function(base) {
 		init: function(container) {
 			base.init(container);
 
+			this.numX = 50;
+			this.numY = 8;
+			this.numZ = 50;
 			this.particleSystem = null;
 
-			this._initParticleSystem();
+			this._setupGUI();
 		},
 
 		/* Public */
 
-		setupCells: function(numX, numY, numZ) {
+		setupCells: function() {
 			var padding = 50,
+				numX = this.numX,
+				numY = this.numY,
+				numZ = this.numZ,
 			    originX = -(numX * padding) / 2,
 			    originY = -(numY * padding) / 2,
 			    originZ = -(numZ * padding) / 2;
 
-			var particleSystem = this.particleSystem,
-			    particles = particleSystem.geometry;
+			var particles = new THREE.Geometry(),
+			    material = new THREE.ParticleBasicMaterial({
+			      color: 0xFFFFFF,
+			      size: 20,
+			      map: THREE.ImageUtils.loadTexture(
+				    "img/particle.png"
+				  ),
+				  blending: THREE.AdditiveBlending,
+				  transparent: true
+			    }),
+			    particleSystem = new THREE.ParticleSystem(particles, material);
 
-			particles.vertices = [];
+		    particleSystem.sortParticles = true;
 
 			for (var x = 0; x < numX; x++) {
 				for (var y = 0; y < numY; y++) {
@@ -34,28 +49,24 @@ var ThreeDVisualization = Visualization.extend(function(base) {
 				}
 			}
 
-			particles.__dirtyVertices = true;
-		},
-
-		/* Public */
-		_initParticleSystem: function() {
-			var particles = new THREE.Geometry(),
-			    material = new THREE.ParticleBasicMaterial({
-			      color: 0xFFFFFF,
-			      size: 20,
-			      map: THREE.ImageUtils.loadTexture(
-				    "img/particle.png"
-				  ),
-				  blending: THREE.AdditiveBlending,
-				  transparent: true
-			    });
-
-			var particleSystem = new THREE.ParticleSystem(particles, material);
-		    particleSystem.sortParticles = true;
-
+			if (this.particleSystem) this.scene.remove(this.particleSystem);
 			this.scene.add(particleSystem);
 
 			this.particleSystem = particleSystem;
+		},
+
+		/* Private */
+
+		_setupGUI: function() {
+			var gui = this.gui;
+
+			var update = _.bind(function() {
+				this.setupCells();
+			}, this);
+
+			gui.add(this, 'numX', 1, 100).step(1).onChange(update);
+			gui.add(this, 'numY', 1, 100).step(1).onChange(update);
+			gui.add(this, 'numZ', 1, 100).step(1).onChange(update);
 		}
 	};
 });
