@@ -12,7 +12,19 @@ var Visualization = Fiber.extend(function() {
 			this._initScene();
 			this._initStats();
 			this._initGUI();
-			this._render();
+		},
+
+		/* Public */
+
+		render: function() {
+			if (this.stats) this.stats.begin();
+
+			this._update();
+			this.renderer.render(this.scene, this.camera);
+
+			if (this.stats) this.stats.end();
+
+			requestAnimationFrame(this.render.bind(this));
 		},
 
 		/* Private */
@@ -63,17 +75,6 @@ var Visualization = Fiber.extend(function() {
 			this.gui = gui;
 		},
 
-		_update: function() {},
-
-		_render: function() {
-			if (this.stats) this.stats.begin();
-
-			this._update();
-			this.renderer.render(this.scene, this.camera);
-
-			if (this.stats) this.stats.end();
-
-			requestAnimationFrame(this._render.bind(this));
-		}
+		_update: function() {}
 	};
 });
