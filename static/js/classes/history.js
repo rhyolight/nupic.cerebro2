@@ -1,21 +1,21 @@
 var History = Fiber.extend(function() {
-	return {
-		init: function() {
-			this.snapshots = [];
-		},
+    return {
+        init: function() {
+            this.snapshots = [];
+        },
 
-		/* Public */
+        /* Public */
 
-		addSnapshot: function(snapshot) {
-			this.snapshots.push(snapshot);
-		},
+        addSnapshot: function(snapshot) {
+            this.snapshots.push(snapshot);
+        },
 
-		getSnapshotAtIndex: function(i) {
-			return this.snapshots[i];
-		},
+        getSnapshotAtIndex: function(i) {
+            return this.snapshots[i];
+        },
 
-		length: function() {
-			return this.snapshots.length;
-		}
-	};
+        length: function() {
+            return this.snapshots.length;
+        }
+    };
 });
