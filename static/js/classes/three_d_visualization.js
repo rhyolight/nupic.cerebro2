@@ -8,12 +8,6 @@ var ThreeDVisualization = Visualization.extend(function(base) {
             this.lastIteration = null;
         },
 
-        setup: function() {
-            base.setup();
-
-            return this;
-        },
-
         /* Private */
 
         _iterationUpdated: function() {

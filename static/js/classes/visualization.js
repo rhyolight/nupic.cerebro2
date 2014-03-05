@@ -14,17 +14,13 @@ var Visualization = Fiber.extend(function() {
             this.guiIteration = null;
 
             this.iteration = 0;
-        },
 
-        setup: function() {
             this._initScene();
             this._initControls();
             this._initStats();
             this._initGUI();
 
             this.historyUpdated();
-
-            return this;
         },
 
         /* Public */

@@ -2,7 +2,7 @@ var container = $('#container');
 
 var history = new History();
 
-var visualization = new ThreeDVisualization(container, history).setup();
+var visualization = new ThreeDVisualization(container, history);
 visualization.render();
 
 // Test dynamically adding snapshots to history
