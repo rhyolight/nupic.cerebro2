@@ -9,15 +9,15 @@ var LocalSnapshot = AbstractSnapshot.extend(function() {
         /* Public */
         
         getModelDimensions: function() {
-            return _.clone(this.modelDimensions);
+            return this.modelDimensions;
         },
 
-        getActiveCells: function() {
-            return _.clone(this.activeCells);
+        getActiveCells: function(callback) {
+            callback(_.clone(this.activeCells));
         },
 
-        getPredictiveCells: function() {
-            return _.clone(this.predictiveCells);
+        getPredictiveCells: function(callback) {
+            callback(_.clone(this.predictiveCells));
         }
     };
 });
