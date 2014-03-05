@@ -31,14 +31,16 @@ var ThreeDVisualization = Visualization.extend(function(base) {
         },
 
         _setupCells: function() {
-            var padding = 50,
+            var paddingX = 100,
+                paddingY = 100,
+                paddingZ = 25,
                 dimensions = this.snapshot.getModelDimensions(),
                 numX = dimensions[0],
                 numY = dimensions[1],
                 numZ = dimensions[2],
-                originX = -(numX * padding) / 2,
-                originY = -(numY * padding) / 2,
-                originZ = -(numZ * padding) / 2;
+                originX = -(numX * paddingX) / 2,
+                originY = -(numY * paddingY) / 2,
+                originZ = -(numZ * paddingZ) / 2;
 
             var particles = new THREE.Geometry(),
                 material = new THREE.ParticleBasicMaterial({
@@ -57,9 +59,9 @@ var ThreeDVisualization = Visualization.extend(function(base) {
             for (var x = 0; x < numX; x++) {
                 for (var y = 0; y < numY; y++) {
                     for (var z = 0; z < numZ; z++) {
-                        var pX = originX + x * padding,
-                            pY = originY + y * padding,
-                            pZ = originZ + z * padding,
+                        var pX = originX + x * paddingX,
+                            pY = originY + y * paddingY,
+                            pZ = originZ + z * paddingZ,
                             particle = new THREE.Vector3(pX, pY, pZ);
 
                         particles.vertices.push(particle);
