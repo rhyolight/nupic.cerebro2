@@ -18,6 +18,8 @@ var Visualization = Fiber.extend(function() {
 
             this.snapshot = null;
             this.dirtyRegion = true;
+            this.loadRegionTimeout = null;
+            this.loadRegionTimeoutDuration = 500; // default (in ms)
             this.activeCells = [];
             this.predictiveCells = [];
 
@@ -158,16 +160,33 @@ var Visualization = Fiber.extend(function() {
         },
 
         _loadRegion: function() {
-            var self = this;
+            var self = this,
+                snapshot = this.snapshot,
+                timeout = this.loadRegionTimeout,
+                timeoutDuration = this.loadRegionTimeoutDuration;
 
-            this.snapshot.getActiveCells(function(error, activeCells) {
-                self.activeCells = activeCells;
-                self.dirtyRegion = true;
-            });
-            this.snapshot.getPredictiveCells(function(error, predictiveCells) {
-                self.predictiveCells = predictiveCells;
-                self.dirtyRegion = true;
-            });
+            if (timeout) clearTimeout(timeout);
+
+            timeout = setTimeout(function() {
+                self.activeCells = [];
+                self.predictiveCells = [];
+
+                snapshot.getActiveCells(_.bind(function(error, activeCells) {
+                    if (self.snapshot != this) return;
+
+                    self.activeCells = activeCells;
+                    self.dirtyRegion = true;
+                }, snapshot));
+
+                snapshot.getPredictiveCells(_.bind(function(error, predictiveCells) {
+                    if (self.snapshot != this) return;
+
+                    self.predictiveCells = predictiveCells;
+                    self.dirtyRegion = true;
+                }, snapshot));
+            }, timeoutDuration);
+
+            this.loadRegionTimeout = timeout;
         },
 
     };
