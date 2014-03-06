@@ -13,7 +13,13 @@ var Visualization = Fiber.extend(function() {
             this.gui = null;
             this.guiIteration = null;
 
+            this.lastIteration = null;
             this.iteration = 0;
+
+            this.snapshot = null;
+            this.dirtyRegion = true;
+            this.activeCells = [];
+            this.predictiveCells = [];
 
             this._initScene();
             this._initControls();
@@ -52,9 +58,13 @@ var Visualization = Fiber.extend(function() {
             }
         },
 
-        /* Private */
+        /* To Override */
 
-        _update: function() {},
+        setupRegion:  function() {},
+        clearRegion:  function() {},
+        updateRegion: function() {},
+
+        /* Private */
 
         _initScene: function() {
             var container = this.container,
@@ -122,6 +132,43 @@ var Visualization = Fiber.extend(function() {
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1);
 
             this.gui = gui;
-        }
+        },
+
+        _iterationUpdated: function() {
+            this.snapshot = this.history.getSnapshotAtIndex(this.iteration - 1);
+
+            this.clearRegion();
+
+            if (this.snapshot) {
+                this.setupRegion();
+                this._loadRegion();
+            }
+        },
+
+        _update: function() {
+            if (this.lastIteration != this.iteration) {
+                this._iterationUpdated();
+                this.lastIteration = this.iteration;
+            }
+
+            if (this.dirtyRegion) {
+                this.updateRegion();
+                this.dirtyRegion = false;
+            }
+        },
+
+        _loadRegion: function() {
+            var self = this;
+
+            this.snapshot.getActiveCells(function(error, activeCells) {
+                self.activeCells = activeCells;
+                self.dirtyRegion = true;
+            });
+            this.snapshot.getPredictiveCells(function(error, predictiveCells) {
+                self.predictiveCells = predictiveCells;
+                self.dirtyRegion = true;
+            });
+        },
+
     };
 });

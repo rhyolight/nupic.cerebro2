@@ -4,44 +4,16 @@ var ThreeDVisualization = Visualization.extend(function(base) {
             base.init(container, history);
 
             this.particleSystem = null;
-            this.snapshot = null;
-            this.lastIteration = null;
 
-            this.dirtyRegion = true;
-            this.activeCells = [];
-            this.predictiveCells = [];
+            // Overrides
+            base.setupRegion  = this.setupRegion;
+            base.clearRegion  = this.clearRegion;
+            base.updateRegion = this.updateRegion;
         },
 
-        /* Private */
+        /* Overrides */
 
-        _iterationUpdated: function() {
-            this.snapshot = this.history.getSnapshotAtIndex(this.iteration - 1);
-
-            if (this.snapshot) this._setupRegion();
-            else this._clearRegion();
-        },
-
-        _update: function() {
-            base._update();
-
-            if (this.lastIteration != this.iteration) {
-                this._iterationUpdated();
-                this.lastIteration = this.iteration;
-            }
-
-            if (this.dirtyRegion) {
-                this._updateRegion();
-                this.dirtyRegion = false;
-            }
-        },
-
-        _clearRegion: function() {
-            if (!this.particleSystem) return;
-
-            this.scene.remove(this.particleSystem);
-        },
-
-        _setupRegion: function() {
+        setupRegion: function() {
             var paddingX = 100,
                 paddingY = 100,
                 paddingZ = 25,
@@ -82,28 +54,18 @@ var ThreeDVisualization = Visualization.extend(function(base) {
                 }
             }
 
-            this._clearRegion();
             this.scene.add(particleSystem);
 
             this.particleSystem = particleSystem;
-
-            this._loadRegion();
         },
 
-        _loadRegion: function() {
-            var self = this;
+        clearRegion: function() {
+            if (!this.particleSystem) return;
 
-            this.snapshot.getActiveCells(function(error, activeCells) {
-                self.activeCells = activeCells;
-                self.dirtyRegion = true;
-            });
-            this.snapshot.getPredictiveCells(function(error, predictiveCells) {
-                self.predictiveCells = predictiveCells;
-                self.dirtyRegion = true;
-            });
+            this.scene.remove(this.particleSystem);
         },
 
-        _updateRegion: function() {
+        updateRegion: function() {
             if (!this.particleSystem) return;
 
             var particles = this.particleSystem.geometry,
