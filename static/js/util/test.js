@@ -7,17 +7,21 @@ function generateRandomSnapshot(minX, maxX, minY, maxY, minZ, maxZ) {
         z = generateRandomInt(minZ, maxZ),
         total = x * y * z;
 
-    var numActiveCells = generateRandomInt(1, total * activeSparsity),
-        numPredictiveCells = generateRandomInt(1, total * predictiveSparsity),
-        activeCells = [],
-        predictiveCells = [];
-
-    for (var i = 0; i < total; i++) {
-        if (i < numActiveCells) activeCells.push(generateRandomInt(0, total));
-        if (i < numPredictiveCells) predictiveCells.push(generateRandomInt(0, total));
-    }
+    var activeCells = generateRandomArrayOfInts(1, total * activeSparsity, 0, total),
+        predictiveCells = generateRandomArrayOfInts(1, total * predictiveSparsity, 0, total);
 
     return new TestNetworkSnapshot([x, y, z], activeCells, predictiveCells);
+}
+
+function generateRandomArrayOfInts(minN, maxN, minVal, maxVal) {
+    var num = generateRandomInt(minN, maxN),
+        ints = [];
+
+    for (var i = 0; i < num; i++) {
+        ints.push(generateRandomInt(minVal, maxVal));
+    }
+
+    return ints;
 }
 
 function generateRandomInt(min, max) {
