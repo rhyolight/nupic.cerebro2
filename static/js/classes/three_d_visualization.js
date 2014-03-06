@@ -1,14 +1,9 @@
 var ThreeDVisualization = Visualization.extend(function(base) {
     return {
         init: function(container, history) {
-            base.init(container, history);
+            base.init.call(this, container, history);
 
             this.particleSystem = null;
-
-            // Overrides
-            base.setupRegion  = this.setupRegion;
-            base.clearRegion  = this.clearRegion;
-            base.updateRegion = this.updateRegion;
         },
 
         /* Overrides */

@@ -1,7 +1,7 @@
 var TestModel = AbstractModel.extend(function(base) {
     return {
         init: function(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, snapshotClass) {
-            base.init();
+            base.init.call(this);
 
             this.minX = minX;
             this.maxX = maxX;

@@ -1,7 +1,7 @@
 var TestInput = AbstractInput.extend(function(base) {
     return {
         init: function(numBits, min, max) {
-            base.init();
+            base.init.call(this);
 
             this.numBits = numBits;
             this.min = min;
