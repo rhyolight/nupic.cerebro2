@@ -69,8 +69,6 @@ var Visualization = Fiber.extend(function() {
             var camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
             var scene = new THREE.Scene();
 
-            camera.position.x = 500;
-            camera.position.y = 1000;
             camera.position.z = 5000;
             scene.add(camera);
 

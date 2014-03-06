@@ -6,6 +6,10 @@ var ThreeDVisualization = Visualization.extend(function(base) {
             this.particleSystem = null;
             this.snapshot = null;
             this.lastIteration = null;
+
+            this.dirtyCells = true;
+            this.activeCells = [];
+            this.predictiveCells = [];
         },
 
         /* Private */
@@ -24,10 +28,17 @@ var ThreeDVisualization = Visualization.extend(function(base) {
                 this._iterationUpdated();
                 this.lastIteration = this.iteration;
             }
+
+            if (this.dirtyCells) {
+                this._updateCells();
+                this.dirtyCells = false;
+            }
         },
 
         _clearCells: function() {
-            if (this.particleSystem) this.scene.remove(this.particleSystem);
+            if (!this.particleSystem) return;
+
+            this.scene.remove(this.particleSystem);
         },
 
         _setupCells: function() {
@@ -44,17 +55,18 @@ var ThreeDVisualization = Visualization.extend(function(base) {
 
             var particles = new THREE.Geometry(),
                 material = new THREE.ParticleBasicMaterial({
-                    color: 0xFFFFFF,
                     size: 20,
                     map: THREE.ImageUtils.loadTexture(
                         "img/particle.png"
                     ),
-                    blending: THREE.AdditiveBlending,
-                    transparent: true
+                    blending: THREE.NormalBlending,
+                    transparent: true,
+                    vertexColors: true
                 }),
                 particleSystem = new THREE.ParticleSystem(particles, material);
 
             particleSystem.sortParticles = true;
+            particleSystem.rotation.x = -(Math.PI / 2);
 
             for (var x = 0; x < numX; x++) {
                 for (var y = 0; y < numY; y++) {
@@ -65,6 +77,7 @@ var ThreeDVisualization = Visualization.extend(function(base) {
                             particle = new THREE.Vector3(pX, pY, pZ);
 
                         particles.vertices.push(particle);
+                        particles.colors.push(new THREE.Color(0xAAAAAA));
                     }
                 }
             }
@@ -73,6 +86,41 @@ var ThreeDVisualization = Visualization.extend(function(base) {
             this.scene.add(particleSystem);
 
             this.particleSystem = particleSystem;
+
+            this._loadCells();
+        },
+
+        _loadCells: function() {
+            var self = this;
+
+            this.snapshot.getActiveCells(function(activeCells) {
+                self.activeCells = activeCells;
+                self.dirtyCells = true;
+            });
+            this.snapshot.getPredictiveCells(function(predictiveCells) {
+                self.predictiveCells = predictiveCells;
+                self.dirtyCells = true;
+            });
+        },
+
+        _updateCells: function() {
+            if (!this.particleSystem) return;
+
+            var particles = this.particleSystem.geometry,
+                activeCells = this.activeCells,
+                predictiveCells = this.predictiveCells;
+
+            for (var i = 0; i < particles.vertices.length; i++) {
+                if (_.contains(activeCells, i)) {
+                    particles.colors[i].setHex(0xFFFFFF);
+                }
+                else if (_.contains(predictiveCells, i)) {
+                    particles.colors[i].setHex(0xAA0000);
+                }
+                else {
+                    particles.colors[i].setHex(0x333333);
+                }
+            }
         }
     };
 });

@@ -9,9 +9,9 @@ visualization.render();
 setInterval(function() {
     var x = Math.ceil(Math.random() * 50),
         y = Math.ceil(Math.random() * 10),
-        z = Math.ceil(Math.random() * 50);
+        z = Math.ceil(Math.random() * 47) + 3;
 
-    var snapshot = new LocalSnapshot([x, y, z], [], []);
+    var snapshot = new TestNetworkSnapshot([x, y, z], [1, 2, 3], [4, 5, 6]);
     history.addSnapshot(snapshot);
     visualization.historyUpdated();
 }, 1000);
