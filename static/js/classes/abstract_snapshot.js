@@ -1,11 +1,15 @@
 var AbstractSnapshot = Fiber.extend(function() {
     return {
-        /* To override */
+        init: function(regionDimensions) {
+            this.regionDimensions = regionDimensions;
+        },
 
         getRegionDimensions: function() {
-            return [50, 50, 8];
+            return _.clone(this.regionDimensions);
         },
         
+        /* To override */
+
         getActiveCells:     function(callback) { callback(null, []); },
         getPredictiveCells: function(callback) { callback(null, []); }
     };

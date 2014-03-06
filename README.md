@@ -10,4 +10,3 @@ A visualization and debugging tool for NuPIC.
 ## Todo
 
 - Use require.js for more targeted script loading
-- Move LocalSnapshot regionDimensions to AbstractSnapshot
