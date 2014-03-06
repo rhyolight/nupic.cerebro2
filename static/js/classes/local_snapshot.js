@@ -1,15 +1,15 @@
 var LocalSnapshot = AbstractSnapshot.extend(function() {
     return {
-        init: function(modelDimensions, activeCells, predictiveCells) {
-            this.modelDimensions = modelDimensions;
+        init: function(regionDimensions, activeCells, predictiveCells) {
+            this.regionDimensions = regionDimensions;
             this.activeCells = activeCells;
             this.predictiveCells = predictiveCells;
         },
 
         /* Public */
         
-        getModelDimensions: function() {
-            return this.modelDimensions;
+        getRegionDimensions: function() {
+            return this.regionDimensions;
         },
 
         getActiveCells: function(callback) {

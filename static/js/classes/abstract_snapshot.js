@@ -2,7 +2,7 @@ var AbstractSnapshot = Fiber.extend(function() {
     return {
         /* To override */
 
-        getModelDimensions: function() {
+        getRegionDimensions: function() {
             return [50, 50, 8];
         },
         
