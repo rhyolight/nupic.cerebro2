@@ -1,7 +1,7 @@
 var container = $('#container');
 
 var history = new History();
-var model = new TestSingleModel();
+var model = new TestMultiModel();
 var visualization = new ThreeDVisualization(container, history);
 
 visualization.render();
