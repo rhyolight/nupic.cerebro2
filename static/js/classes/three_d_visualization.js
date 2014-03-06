@@ -118,7 +118,7 @@ var ThreeDVisualization = Visualization.extend(function(base) {
                     particles.colors[i].setHex(0xAA0000);
                 }
                 else {
-                    particles.colors[i].setHex(0x333333);
+                    particles.colors[i].setHex(0x222222);
                 }
             }
         }

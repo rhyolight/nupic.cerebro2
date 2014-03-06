@@ -11,17 +11,3 @@ setInterval(function() {
     history.addSnapshot(snapshot);
     visualization.historyUpdated();
 }, 1000);
-
-/* Utilities */
-
-function generateRandomSnapshot(minX, maxX, minY, maxY, minZ, maxZ) {
-    var x = generateRandomValue(minX, maxX),
-        y = generateRandomValue(minY, maxY),
-        z = generateRandomValue(minZ, maxZ);
-
-    return new TestNetworkSnapshot([x, y, z], [1, 2, 3], [4, 5, 6]);
-}
-
-function generateRandomValue(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
