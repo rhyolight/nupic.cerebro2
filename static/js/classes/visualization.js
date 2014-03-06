@@ -142,7 +142,7 @@ var Visualization = Fiber.extend(function() {
             this.clearRegion();
 
             if (this.snapshot) {
-                this.setupRegion();
+                this.setupRegion(); // TODO: can instead call updateRegion if snapshot dimensions haven't changed
                 this._loadRegion();
             }
         },
