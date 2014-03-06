@@ -16,7 +16,7 @@ var TestNetworkSnapshot = AbstractSnapshot.extend(function() {
             var self = this;
 
             setTimeout(function() {
-                callback(_.clone(self.activeCells));
+                callback(null, _.clone(self.activeCells));
             }, 1500);
         },
 
@@ -24,7 +24,7 @@ var TestNetworkSnapshot = AbstractSnapshot.extend(function() {
             var self = this;
 
             setTimeout(function() {
-                callback(_.clone(self.predictiveCells));
+                callback(null, _.clone(self.predictiveCells));
             }, 2500);
         }
     };

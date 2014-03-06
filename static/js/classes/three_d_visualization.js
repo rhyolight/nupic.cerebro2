@@ -93,11 +93,11 @@ var ThreeDVisualization = Visualization.extend(function(base) {
         _loadCells: function() {
             var self = this;
 
-            this.snapshot.getActiveCells(function(activeCells) {
+            this.snapshot.getActiveCells(function(error, activeCells) {
                 self.activeCells = activeCells;
                 self.dirtyCells = true;
             });
-            this.snapshot.getPredictiveCells(function(predictiveCells) {
+            this.snapshot.getPredictiveCells(function(error, predictiveCells) {
                 self.predictiveCells = predictiveCells;
                 self.dirtyCells = true;
             });

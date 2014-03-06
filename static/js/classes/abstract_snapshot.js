@@ -6,7 +6,7 @@ var AbstractSnapshot = Fiber.extend(function() {
             return [50, 50, 8];
         },
         
-        getActiveCells:     function(callback) { callback([]); },
-        getPredictiveCells: function(callback) { callback([]); }
+        getActiveCells:     function(callback) { callback(null, []); },
+        getPredictiveCells: function(callback) { callback(null, []); }
     };
 });

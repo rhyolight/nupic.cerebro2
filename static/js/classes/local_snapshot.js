@@ -13,11 +13,11 @@ var LocalSnapshot = AbstractSnapshot.extend(function() {
         },
 
         getActiveCells: function(callback) {
-            callback(_.clone(this.activeCells));
+            callback(null, _.clone(this.activeCells));
         },
 
         getPredictiveCells: function(callback) {
-            callback(_.clone(this.predictiveCells));
+            callback(null, _.clone(this.predictiveCells));
         }
     };
 });
