@@ -1,17 +1,7 @@
-var TestNetworkSnapshot = AbstractSnapshot.extend(function() {
+var TestNetworkSnapshot = LocalSnapshot.extend(function() {
     return {
-        init: function(regionDimensions, activeCells, predictiveCells) {
-            this.regionDimensions = regionDimensions;
-            this.activeCells = activeCells;
-            this.predictiveCells = predictiveCells;
-        },
-
         /* Public */
         
-        getRegionDimensions: function() {
-            return this.regionDimensions;
-        },
-
         getActiveCells: function(callback) {
             var self = this;
 

@@ -1,13 +1,17 @@
 var container = $('#container');
 
 var history = new History();
-var model = new TestMultiModel();
+var model = new TestModel(1, 50, 1, 25, 3, 5, 0.1, 0.2, TestNetworkSnapshot);
 var visualization = new ThreeDVisualization(container, history);
+
+// Uncomment to speed up loading of regions
+// visualization.loadRegionTimeoutDuration = 0;
 
 visualization.render();
 
 // Test dynamically adding random snapshots to history
 runModel();
+
 
 function runModel() {
     setTimeout(function() {

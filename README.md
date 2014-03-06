@@ -9,6 +9,5 @@ A visualization and debugging tool for NuPIC.
 
 ## Todo
 
-- Finish TestSingleModel
-- Remove utils/test.js
 - Use require.js for more targeted script loading
+- Move LocalSnapshot regionDimensions to AbstractSnapshot
