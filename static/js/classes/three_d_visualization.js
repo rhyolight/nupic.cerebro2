@@ -65,7 +65,8 @@ var ThreeDVisualization = Visualization.extend(function(base) {
 
             var particles = this.particleSystem.geometry,
                 activeCells = this.activeCells,
-                predictiveCells = this.predictiveCells;
+                predictiveCells = this.predictiveCells,
+                proximalSynapses = this.proximalSynapses;
 
             for (var i = 0; i < particles.vertices.length; i++) {
                 if (this.showActiveCells && _.contains(activeCells, i)) {
@@ -78,6 +79,8 @@ var ThreeDVisualization = Visualization.extend(function(base) {
                     particles.colors[i].setHex(0x222222);
                 }
             }
+
+            console.log(proximalSynapses);
         }
     };
 });

@@ -15,6 +15,7 @@ var Visualization = Fiber.extend(function() {
 
             this.showActiveCells = true;
             this.showPredictiveCells = true;
+            this.showProximalSynapses = true;
 
             this.iteration = 0;
             this.lastIteration = this.iteration;
@@ -24,6 +25,7 @@ var Visualization = Fiber.extend(function() {
             this.loadRegionTimeoutDuration = 500; // default (in ms)
             this.activeCells = [];
             this.predictiveCells = [];
+            this.proximalSynapses = [];
 
             this._initScene();
             this._initControls();
@@ -140,6 +142,7 @@ var Visualization = Fiber.extend(function() {
             var viewFolder = gui.addFolder('View');
             viewFolder.add(this, 'showActiveCells').onChange(callback);
             viewFolder.add(this, 'showPredictiveCells').onChange(callback);
+            viewFolder.add(this, 'showProximalSynapses').onChange(callback);
 
             this.gui = gui;
         },
@@ -196,6 +199,13 @@ var Visualization = Fiber.extend(function() {
                     if (self.snapshot != this) return;
 
                     self.predictiveCells = predictiveCells;
+                    self.updateRegion();
+                }, snapshot));
+
+                snapshot.getProximalSynapses(_.bind(function(error, proximalSynapses) {
+                    if (self.snapshot != this) return;
+
+                    self.proximalSynapses = proximalSynapses;
                     self.updateRegion();
                 }, snapshot));
             }, timeoutDuration);
