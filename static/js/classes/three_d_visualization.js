@@ -68,10 +68,10 @@ var ThreeDVisualization = Visualization.extend(function(base) {
                 predictiveCells = this.predictiveCells;
 
             for (var i = 0; i < particles.vertices.length; i++) {
-                if (_.contains(activeCells, i)) {
+                if (this.showActiveCells && _.contains(activeCells, i)) {
                     particles.colors[i].setHex(0xFFFFFF);
                 }
-                else if (_.contains(predictiveCells, i)) {
+                else if (this.showPredictiveCells && _.contains(predictiveCells, i)) {
                     particles.colors[i].setHex(0xAA0000);
                 }
                 else {

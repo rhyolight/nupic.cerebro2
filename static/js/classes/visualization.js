@@ -13,6 +13,9 @@ var Visualization = Fiber.extend(function() {
             this.gui = null;
             this.guiIteration = null;
 
+            this.showActiveCells = true;
+            this.showPredictiveCells = true;
+
             this.iteration = 0;
             this.lastIteration = this.iteration;
 
@@ -132,6 +135,12 @@ var Visualization = Fiber.extend(function() {
             this.container.append(domElement);
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1);
+
+            var callback = _.bind(this.updateRegion, this);
+
+            var viewFolder = gui.addFolder('View');
+            viewFolder.add(this, 'showActiveCells').onChange(callback);
+            viewFolder.add(this, 'showPredictiveCells').onChange(callback);
 
             this.gui = gui;
         },
