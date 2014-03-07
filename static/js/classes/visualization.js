@@ -13,8 +13,8 @@ var Visualization = Fiber.extend(function() {
             this.gui = null;
             this.guiIteration = null;
 
-            this.lastIteration = null;
             this.iteration = 0;
+            this.lastIteration = this.iteration;
 
             this.snapshot = null;
             this.dirtyRegion = true;
@@ -137,13 +137,19 @@ var Visualization = Fiber.extend(function() {
         },
 
         _iterationUpdated: function() {
-            this.snapshot = this.history.getSnapshotAtIndex(this.iteration - 1);
+            var lastSnapshot = this.snapshot,
+                snapshot = this.history.getSnapshotAtIndex(this.iteration - 1);
 
-            this.clearRegion();
+            this.snapshot = snapshot;
 
-            if (this.snapshot) {
-                this.setupRegion(); // TODO: can instead call updateRegion if snapshot dimensions haven't changed
-                this._loadRegion();
+            this._loadRegion();
+
+            if (lastSnapshot && _.isEqual(snapshot.getRegionDimensions(), lastSnapshot.getRegionDimensions())) {
+                this.updateRegion();
+            }
+            else {
+                this.clearRegion();
+                this.setupRegion();
             }
         },
 
@@ -165,12 +171,12 @@ var Visualization = Fiber.extend(function() {
                 timeout = this.loadRegionTimeout,
                 timeoutDuration = this.loadRegionTimeoutDuration;
 
+            self.activeCells = [];
+            self.predictiveCells = [];
+
             if (timeout) clearTimeout(timeout);
 
             timeout = setTimeout(function() {
-                self.activeCells = [];
-                self.predictiveCells = [];
-
                 snapshot.getActiveCells(_.bind(function(error, activeCells) {
                     if (self.snapshot != this) return;
 
