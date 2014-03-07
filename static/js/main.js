@@ -6,13 +6,15 @@ var minX = intParam('minX') || 50,
     maxZ = intParam('maxZ') || 5,
     activeSparsity = intParam('activeSparsity') || 0.1,
     predictiveSparsity = intParam('predictiveSparsity') || 0.2,
+    minProximal = intParam('minProximal') || 100,
+    maxProximal = intParam('maxProximal') || 1000,
     snapshotClass = (strParam('snapshotClass') == "TestNetworkSnapshot") ? TestNetworkSnapshot : LocalSnapshot,
     loadRegionTimeoutDuration = intParam('loadRegionTimeoutDuration') || 0;
 
 var container = $('#container');
 
 var history = new History();
-var model = new TestModel(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, snapshotClass);
+var model = new TestModel(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, snapshotClass);
 var visualization = new ThreeDVisualization(container, history);
 
 visualization.loadRegionTimeoutDuration = loadRegionTimeoutDuration;
