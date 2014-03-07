@@ -140,6 +140,11 @@ var Visualization = Fiber.extend(function() {
             var lastSnapshot = this.snapshot,
                 snapshot = this.history.getSnapshotAtIndex(this.iteration - 1);
 
+            if (!snapshot) {
+                console.log("Invalid iteration index: " + this.iteration);
+                return;
+            }
+
             this.snapshot = snapshot;
 
             this._loadRegion();
