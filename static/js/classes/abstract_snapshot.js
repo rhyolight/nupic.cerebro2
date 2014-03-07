@@ -24,7 +24,7 @@ var AbstractSnapshot = Fiber.extend(function() {
             /* Return:
                 A list of indices, one for each predictive cell
                     Example: [5, 74, 235, ...]
-           */
+            */
             callback(null, []);
         },
 
