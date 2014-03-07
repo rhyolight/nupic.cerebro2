@@ -80,7 +80,9 @@ var ThreeDVisualization = Visualization.extend(function(base) {
                 }
             }
 
-            console.log(proximalSynapses);
+            if (this.showProximalSynapses) {
+                console.log(proximalSynapses);
+            }
         }
     };
 });
