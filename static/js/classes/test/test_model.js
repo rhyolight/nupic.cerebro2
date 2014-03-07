@@ -19,13 +19,13 @@ var TestModel = AbstractModel.extend(function(base) {
         /* Public */
 
         run: function(input, callback) {
-            var snapshot = this._generateSnapshot();
+            var snapshot = this._generateSnapshot(input);
             callback(null, snapshot);
         },
 
         /* Private */
 
-        _generateSnapshot: function() {
+        _generateSnapshot: function(input) {
             var minX = this.minX,
                 maxX = this.maxX,
                 minY = this.minY,
@@ -36,7 +36,11 @@ var TestModel = AbstractModel.extend(function(base) {
                 predictiveSparsity = this.predictiveSparsity,
                 minProximal = this.minProximal,
                 maxProximal = this.maxProximal,
-                snapshotClass = this.snapshotClass;
+                snapshotClass = this.snapshotClass,
+                inputDimensions = input.getDimensions(),
+                inputX = inputDimensions[0],
+                inputY = inputDimensions[1],
+                inputTotal = inputX * inputY;
 
             var x = _.random(minX, maxX),
                 y = _.random(minY, maxY),
@@ -45,7 +49,7 @@ var TestModel = AbstractModel.extend(function(base) {
 
             var numActiveCells = _.random(1, total * activeSparsity),
                 numPredictiveCells = _.random(1, total * predictiveSparsity),
-                numProximal = _.random(minProximal, Math.min(maxProximal, total));
+                numProximal = _.random(Math.min(minProximal, inputTotal), Math.min(maxProximal, inputTotal));
 
             var activeCells = _(numActiveCells).times(function() {
                     return _.random(total);
@@ -57,7 +61,7 @@ var TestModel = AbstractModel.extend(function(base) {
                     return _.random(100) / 100;
                 });
 
-            return new snapshotClass([x, y, z], activeCells, predictiveCells, proximalSynapses);
+            return new snapshotClass(input, [x, y, z], activeCells, predictiveCells, proximalSynapses);
         }
     };
 });

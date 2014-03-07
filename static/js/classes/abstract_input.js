@@ -1,6 +1,8 @@
 var AbstractInput = Fiber.extend(function() {
     return {
-        init: function() {},
+        init: function(dimensions) {
+            this.dimensions = dimensions;
+        },
         
         /* To override */
 

@@ -1,7 +1,7 @@
 var LocalSnapshot = AbstractSnapshot.extend(function(base) {
     return {
-        init: function(regionDimensions, activeCells, predictiveCells, proximalSynapses) {
-            base.init.call(this, regionDimensions);
+        init: function(input, regionDimensions, activeCells, predictiveCells, proximalSynapses) {
+            base.init.call(this, input, regionDimensions);
 
             this.activeCells = activeCells;
             this.predictiveCells = predictiveCells;

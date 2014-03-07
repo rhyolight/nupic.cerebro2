@@ -81,6 +81,7 @@ var ThreeDVisualization = Visualization.extend(function(base) {
             }
 
             if (this.showProximalSynapses) {
+                console.log(this.snapshot.getInput().getDimensions());
                 console.log(proximalSynapses);
             }
         }

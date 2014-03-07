@@ -1,13 +1,18 @@
 var AbstractSnapshot = Fiber.extend(function() {
     return {
-        init: function(regionDimensions) {
+        init: function(input, regionDimensions) {
+            this.input = input;
             this.regionDimensions = regionDimensions;
         },
 
+        getInput: function() {
+            return this.input;
+        },
+        
         getRegionDimensions: function() {
             return _.clone(this.regionDimensions);
         },
-        
+
         /* To override
             Note: callbacks params follow Node.js convention of (error, retVal)
         */

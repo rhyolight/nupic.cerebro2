@@ -1,11 +1,15 @@
 var TestInput = AbstractInput.extend(function(base) {
     return {
-        init: function(numBits, min, max) {
-            base.init.call(this);
+        init: function(dimensions, numBits, min, max) {
+            base.init.call(this, dimensions);
 
             this.numBits = numBits;
             this.min = min;
             this.max = max;
+        },
+
+        getDimensions: function() {
+            return this.dimensions;
         },
 
         getBits: function(callback) {

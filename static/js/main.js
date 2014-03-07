@@ -6,7 +6,7 @@ var minX = intParam('minX') || 50,
     maxZ = intParam('maxZ') || 5,
     activeSparsity = intParam('activeSparsity') || 0.1,
     predictiveSparsity = intParam('predictiveSparsity') || 0.2,
-    minProximal = intParam('minProximal') || 100,
+    minProximal = intParam('minProximal') || 10,
     maxProximal = intParam('maxProximal') || 1000,
     snapshotClass = (strParam('snapshotClass') == "TestNetworkSnapshot") ? TestNetworkSnapshot : LocalSnapshot,
     loadRegionTimeoutDuration = intParam('loadRegionTimeoutDuration') || 0;
@@ -25,7 +25,7 @@ runFakeModel();
 
 function runFakeModel() {
     setTimeout(function() {
-        var input = new TestInput(5, 0, 100);
+        var input = new TestInput([7, 10], 5, 0, 100);
 
         model.run(input, function(error, snapshot) {
             history.addSnapshot(snapshot);
