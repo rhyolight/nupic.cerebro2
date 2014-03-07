@@ -1,19 +1,27 @@
+var minX = intParam('minX') || 50,
+    maxX = intParam('maxX') || 50,
+    minY = intParam('minY') || 25,
+    maxY = intParam('maxY') || 25,
+    minZ = intParam('minZ') || 5,
+    maxZ = intParam('maxZ') || 5,
+    activeSparsity = intParam('activeSparsity') || 0.1,
+    predictiveSparsity = intParam('predictiveSparsity') || 0.2,
+    snapshotClass = (strParam('snapshotClass') == "TestNetworkSnapshot") ? TestNetworkSnapshot : LocalSnapshot,
+    loadRegionTimeoutDuration = intParam('loadRegionTimeoutDuration') || 0;
+
 var container = $('#container');
 
 var history = new History();
-var model = new TestModel(1, 50, 1, 25, 3, 5, 0.1, 0.2, TestNetworkSnapshot);
+var model = new TestModel(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, snapshotClass);
 var visualization = new ThreeDVisualization(container, history);
 
-// Uncomment to speed up loading of regions
-// visualization.loadRegionTimeoutDuration = 0;
-
+visualization.loadRegionTimeoutDuration = loadRegionTimeoutDuration;
 visualization.render();
 
-// Test dynamically adding random snapshots to history
-runModel();
+runFakeModel();
 
 
-function runModel() {
+function runFakeModel() {
     setTimeout(function() {
         var input = new TestInput(5, 0, 100);
 
@@ -21,7 +29,15 @@ function runModel() {
             history.addSnapshot(snapshot);
             visualization.historyUpdated();
 
-            runModel();
+            runFakeModel();
         });
     }, 1000);
+}
+
+function intParam(key) {
+    return Number(strParam(key));
+}
+
+function strParam(key) {
+    return $.url().fparam(key);
 }
