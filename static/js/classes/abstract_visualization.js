@@ -147,6 +147,13 @@ var AbstractVisualization = Fiber.extend(function() {
             this.gui = gui;
         },
 
+        _update: function() {
+            if (this.lastIteration != this.iteration) {
+                this._iterationUpdated();
+                this.lastIteration = this.iteration;
+            }
+        },
+
         _iterationUpdated: function() {
             var lastSnapshot = this.snapshot,
                 snapshot = this.history.getSnapshotAtIndex(this.iteration - 1);
@@ -202,13 +209,6 @@ var AbstractVisualization = Fiber.extend(function() {
         _updateDrawings: function() {
             this.inputDrawing.update();
             this.outputDrawing.update();
-        },
-
-        _update: function() {
-            if (this.lastIteration != this.iteration) {
-                this._iterationUpdated();
-                this.lastIteration = this.iteration;
-            }
         },
 
         _loadLayers: function() {
