@@ -1,4 +1,4 @@
-var ThreeDVisualization = Visualization.extend(function(base) {
+var ThreeDVisualization = AbstractVisualization.extend(function(base) {
     return {
         getInputDrawing: function(scene) {
             return new ThreeDDrawing(scene, 0, 0, -500);

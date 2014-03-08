@@ -1,4 +1,4 @@
-var Visualization = Fiber.extend(function() {
+var AbstractVisualization = Fiber.extend(function() {
     return {
         init: function(container, history) {
             this.container = container;

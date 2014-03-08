@@ -20,5 +20,4 @@ You can the visit the following URLs in your browser:
 
 ## Todo
 
-- Rename Visualization to AbstractVisualization
 - Clean up creating and updating drawings
