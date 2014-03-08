@@ -4,6 +4,7 @@ var AbstractDrawing = Fiber.extend(function() {
             this.scene = scene;
 
             this.layerDimensions = null;
+            this.inputDrawing = null;
             this.reset();
 
             this.showActiveCells = true;
@@ -15,6 +16,10 @@ var AbstractDrawing = Fiber.extend(function() {
 
         setLayerDimensions: function(layerDimensions) {
             this.layerDimensions = layerDimensions;
+        },
+
+        setInputDrawing: function(inputDrawing) {
+            this.inputDrawing = inputDrawing;
         },
 
         setActiveCells: function(activeCells) {

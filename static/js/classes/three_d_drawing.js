@@ -73,13 +73,17 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
             var particles = this.particleSystem.geometry,
                 activeCells = this.activeCells,
                 predictiveCells = this.predictiveCells,
-                proximalSynapses = this.proximalSynapses;
+                proximalSynapses = this.proximalSynapses,
+                showActiveCells = this.showActiveCells,
+                showPredictiveCells = this.showPredictiveCells,
+                showProximalSynapses = this.showProximalSynapses,
+                inputDrawing = this.inputDrawing;
 
             for (var i = 0; i < particles.vertices.length; i++) {
-                if (this.showActiveCells && _.contains(activeCells, i)) {
+                if (showActiveCells && _.contains(activeCells, i)) {
                     particles.colors[i].setHex(0xFFFFFF);
                 }
-                else if (this.showPredictiveCells && _.contains(predictiveCells, i)) {
+                else if (showPredictiveCells && _.contains(predictiveCells, i)) {
                     particles.colors[i].setHex(0xAA0000);
                 }
                 else {
@@ -87,9 +91,14 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 }
             }
 
-            if (this.showProximalSynapses) {
+            if (showProximalSynapses && inputDrawing) {
+                console.log(inputDrawing.getParticles().length);
                 console.log(proximalSynapses);
             }
+        },
+
+        getParticles: function() {
+            return this.particleSystem.geometry.vertices;
         }
     };
 });

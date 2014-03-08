@@ -87,8 +87,13 @@ var AbstractVisualization = Fiber.extend(function() {
             this.camera = camera;
             this.scene = scene;
 
-            this.inputDrawing = this.getInputDrawing(scene);
-            this.outputDrawing = this.getOutputDrawing(scene);
+            var inputDrawing = this.getInputDrawing(scene),
+                outputDrawing = this.getOutputDrawing(scene);
+
+            outputDrawing.setInputDrawing(inputDrawing);
+
+            this.inputDrawing = inputDrawing;
+            this.outputDrawing = outputDrawing;
         },
 
         _initControls: function() {
@@ -171,22 +176,26 @@ var AbstractVisualization = Fiber.extend(function() {
                     outputDimensionsChanged = false;
             }
 
+            var inputDrawing = this.inputDrawing,
+                outputDrawing = this.outputDrawing;
+
+            inputDrawing.setLayerDimensions(thisInputDimensions);
+            outputDrawing.setLayerDimensions(thisOutputDimensions);
+
             if (inputDimensionsChanged) {
-                this.inputDrawing.clear();
-                this.inputDrawing.setLayerDimensions(thisInputDimensions);
-                this.inputDrawing.setup();
+                inputDrawing.clear();
+                inputDrawing.setup();
             }
             else {
-                this.inputDrawing.update();
+                inputDrawing.update();
             }
 
             if (outputDimensionsChanged) {
-                this.outputDrawing.clear();
-                this.outputDrawing.setLayerDimensions(thisOutputDimensions);
-                this.outputDrawing.setup();
+                outputDrawing.clear();
+                outputDrawing.setup();
             }
             else {
-                this.outputDrawing.update();
+                outputDrawing.update();
             }
         },
 
