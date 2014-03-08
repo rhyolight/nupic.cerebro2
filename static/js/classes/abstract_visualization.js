@@ -172,9 +172,8 @@ var AbstractVisualization = Fiber.extend(function() {
             }
 
             if (inputDimensionsChanged) {
-                this.inputDrawing.setLayerDimensions(thisInputDimensions);
-
                 this.inputDrawing.clear();
+                this.inputDrawing.setLayerDimensions(thisInputDimensions);
                 this.inputDrawing.setup();
             }
             else {
@@ -182,9 +181,8 @@ var AbstractVisualization = Fiber.extend(function() {
             }
 
             if (outputDimensionsChanged) {
-                this.outputDrawing.setLayerDimensions(thisOutputDimensions);
-
                 this.outputDrawing.clear();
+                this.outputDrawing.setLayerDimensions(thisOutputDimensions);
                 this.outputDrawing.setup();
             }
             else {
