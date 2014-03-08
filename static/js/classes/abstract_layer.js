@@ -4,6 +4,8 @@ var AbstractLayer = Fiber.extend(function() {
             this.dimensions = dimensions;
         },
 
+        /* Public */
+
         getDimensions: function() {
             return _.clone(this.dimensions);
         },
