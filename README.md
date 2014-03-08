@@ -17,3 +17,8 @@ You can the visit the following URLs in your browser:
 
     // Network demo
     http://localhost:8000/#layerClass=TestNetworkLayer&loadLayersTimeoutDuration=500
+
+## Todo
+
+- Rename Visualization to AbstractVisualization
+- Clean up creating and updating drawings

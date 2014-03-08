@@ -13,21 +13,14 @@ var Visualization = Fiber.extend(function() {
             this.gui = null;
             this.guiIteration = null;
 
-            this.showActiveCells = true;
-            this.showPredictiveCells = true;
-            this.showProximalSynapses = true;
-
             this.iteration = 0;
             this.lastIteration = this.iteration;
 
             this.snapshot = null;
             this.loadLayersTimeout = null;
             this.loadLayersTimeoutDuration = 500; // default (in ms)
-            this.activeCells = [];
-            this.predictiveCells = [];
-            this.proximalSynapses = [];
 
-            this._initScene();
+            this._initDrawings();
             this._initControls();
             this._initStats();
             this._initGUI();
@@ -66,13 +59,12 @@ var Visualization = Fiber.extend(function() {
 
         /* To Override */
 
-        setupDrawing:  function() {},
-        clearDrawing:  function() {},
-        updateDrawing: function() {},
+        getInputDrawing: function() {return null;},
+        getOutputDrawing: function() {return null;},
 
         /* Private */
 
-        _initScene: function() {
+        _initDrawings: function() {
             var container = this.container,
                 width = container.width(),
                 height = container.height(),
@@ -94,6 +86,9 @@ var Visualization = Fiber.extend(function() {
             this.renderer = renderer;
             this.camera = camera;
             this.scene = scene;
+
+            this.inputDrawing = this.getInputDrawing(scene);
+            this.outputDrawing = this.getOutputDrawing(scene);
         },
 
         _initControls: function() {
@@ -137,12 +132,12 @@ var Visualization = Fiber.extend(function() {
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1);
 
-            var callback = _.bind(this.updateDrawing, this);
+            var callback = _.bind(this._updateDrawings, this);
 
             var viewFolder = gui.addFolder('View');
-            viewFolder.add(this, 'showActiveCells').onChange(callback);
-            viewFolder.add(this, 'showPredictiveCells').onChange(callback);
-            viewFolder.add(this, 'showProximalSynapses').onChange(callback);
+            viewFolder.add(this.outputDrawing, 'showActiveCells').onChange(callback);
+            viewFolder.add(this.outputDrawing, 'showPredictiveCells').onChange(callback);
+            viewFolder.add(this.outputDrawing, 'showProximalSynapses').onChange(callback);
 
             this.gui = gui;
         },
@@ -160,16 +155,46 @@ var Visualization = Fiber.extend(function() {
 
             this._loadLayers();
 
-            if (lastSnapshot &&
-                _.isEqual(snapshot.getInputLayer().getDimensions(),  lastSnapshot.getInputLayer().getDimensions()) &&
-                _.isEqual(snapshot.getOutputLayer().getDimensions(), lastSnapshot.getOutputLayer().getDimensions())
-            ) {
-                this.updateDrawing();
+            var inputDimensionsChanged  = true,
+                outputDimensionsChanged = true,
+                thisInputDimensions = snapshot.getInputLayer().getDimensions(),
+                thisOutputDimensions = snapshot.getOutputLayer().getDimensions();
+
+            if (lastSnapshot) {
+                var lastInputDimensions = lastSnapshot.getInputLayer().getDimensions(),
+                    lastOutputDimensions = lastSnapshot.getOutputLayer().getDimensions();
+
+                if (_.isEqual(thisInputDimensions, lastInputDimensions))
+                    inputDimensionsChanged = false;
+
+                if (_.isEqual(thisOutputDimensions, lastOutputDimensions))
+                    outputDimensionsChanged = false;
+            }
+
+            if (inputDimensionsChanged) {
+                this.inputDrawing.setLayerDimensions(thisInputDimensions);
+
+                this.inputDrawing.clear();
+                this.inputDrawing.setup();
             }
             else {
-                this.clearDrawing();
-                this.setupDrawing();
+                this.inputDrawing.update();
             }
+
+            if (outputDimensionsChanged) {
+                this.outputDrawing.setLayerDimensions(thisOutputDimensions);
+
+                this.outputDrawing.clear();
+                this.outputDrawing.setup();
+            }
+            else {
+                this.outputDrawing.update();
+            }
+        },
+
+        _updateDrawings: function() {
+            this.inputDrawing.update();
+            this.outputDrawing.update();
         },
 
         _update: function() {
@@ -180,43 +205,51 @@ var Visualization = Fiber.extend(function() {
         },
 
         _loadLayers: function() {
-            // TODO: should also load parts of input layer
             var self = this,
                 snapshot = this.snapshot,
+                inputLayer = snapshot.getInputLayer(),
                 outputLayer = snapshot.getOutputLayer(),
+                inputDrawing = this.inputDrawing,
+                outputDrawing = this.outputDrawing,
                 timeout = this.loadLayersTimeout,
                 timeoutDuration = this.loadLayersTimeoutDuration;
 
-            self.activeCells = [];
-            self.predictiveCells = [];
+            inputDrawing.reset();
+            outputDrawing.reset();
 
             if (timeout) clearTimeout(timeout);
 
             timeout = setTimeout(function() {
+                inputLayer.getActiveCells(_.bind(function(error, activeCells) {
+                    if (self.snapshot != this) return;
+
+                    self.inputDrawing.setActiveCells(activeCells);
+                    self.inputDrawing.update();
+                }, snapshot));
+
                 outputLayer.getActiveCells(_.bind(function(error, activeCells) {
                     if (self.snapshot != this) return;
 
-                    self.activeCells = activeCells;
-                    self.updateDrawing();
+                    self.outputDrawing.setActiveCells(activeCells);
+                    self.outputDrawing.update();
                 }, snapshot));
 
                 outputLayer.getPredictiveCells(_.bind(function(error, predictiveCells) {
                     if (self.snapshot != this) return;
 
-                    self.predictiveCells = predictiveCells;
-                    self.updateDrawing();
+                    self.outputDrawing.setPredictiveCells(predictiveCells);
+                    self.outputDrawing.update();
                 }, snapshot));
 
                 outputLayer.getProximalSynapses(_.bind(function(error, proximalSynapses) {
                     if (self.snapshot != this) return;
 
-                    self.proximalSynapses = proximalSynapses;
-                    self.updateDrawing();
+                    self.outputDrawing.setProximalSynapses(proximalSynapses);
+                    self.outputDrawing.update();
                 }, snapshot));
             }, timeoutDuration);
 
             this.loadLayersTimeout = timeout;
-        },
-
+        }
     };
 });
