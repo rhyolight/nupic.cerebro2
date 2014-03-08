@@ -46,6 +46,8 @@ var AbstractDrawing = Fiber.extend(function() {
 
         clear: function() {},
 
-        update: function() {}
+        updateCells: function() {},
+
+        updateProximalSynapses: function() {}
     };
 });

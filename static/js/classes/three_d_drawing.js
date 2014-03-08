@@ -10,6 +10,8 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
             this.particleSystem = null;
         },
 
+        /* Public */
+
         setup: function() {
             var paddingX = 100,
                 paddingY = 100,
@@ -67,17 +69,14 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
             this.scene.remove(this.particleSystem);
         },
 
-        update: function() {
+        updateCells: function() {
             if (!this.particleSystem) return;
 
             var particles = this.particleSystem.geometry,
                 activeCells = this.activeCells,
                 predictiveCells = this.predictiveCells,
-                proximalSynapses = this.proximalSynapses,
                 showActiveCells = this.showActiveCells,
-                showPredictiveCells = this.showPredictiveCells,
-                showProximalSynapses = this.showProximalSynapses,
-                inputDrawing = this.inputDrawing;
+                showPredictiveCells = this.showPredictiveCells;
 
             for (var i = 0; i < particles.vertices.length; i++) {
                 if (showActiveCells && _.contains(activeCells, i)) {
@@ -90,6 +89,12 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                     particles.colors[i].setHex(0x222222);
                 }
             }
+        },
+
+        updateProximalSynapses: function() {
+            var proximalSynapses = this.proximalSynapses,
+                showProximalSynapses = this.showProximalSynapses,
+                inputDrawing = this.inputDrawing;
 
             if (showProximalSynapses && inputDrawing) {
                 console.log(inputDrawing.getParticles().length);

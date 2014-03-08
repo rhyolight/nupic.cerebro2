@@ -40,8 +40,10 @@ function initFakeData() {
 function runModel() {
     setTimeout(function() {
         model.getNextSnapshot(function(error, snapshot) {
-            history.addSnapshot(snapshot);
-            visualization.historyUpdated();
+            if (snapshot) {
+                history.addSnapshot(snapshot);
+                visualization.historyUpdated();
+            }
 
             runModel();
         });
