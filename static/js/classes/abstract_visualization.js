@@ -28,6 +28,11 @@ var AbstractVisualization = Fiber.extend(function() {
             this.historyUpdated();
         },
 
+        /* To Override */
+
+        getInputDrawing: function() {return null;},
+        getOutputDrawing: function() {return null;},
+
         /* Public */
 
         render: function() {
@@ -56,11 +61,6 @@ var AbstractVisualization = Fiber.extend(function() {
                 guiIteration.setValue(min);
             }
         },
-
-        /* To Override */
-
-        getInputDrawing: function() {return null;},
-        getOutputDrawing: function() {return null;},
 
         /* Private */
 
