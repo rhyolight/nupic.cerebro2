@@ -1,4 +1,4 @@
-var TestNetworkSnapshot = LocalSnapshot.extend(function() {
+var TestNetworkLayer = TestLocalLayer.extend(function() {
     return {
         /* Public */
         

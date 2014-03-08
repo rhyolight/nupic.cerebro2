@@ -1,3 +1,5 @@
+/* Main */
+
 var minX = intParam('minX') || 50,
     maxX = intParam('maxX') || 50,
     minY = intParam('minY') || 25,
@@ -8,33 +10,45 @@ var minX = intParam('minX') || 50,
     predictiveSparsity = intParam('predictiveSparsity') || 0.2,
     minProximal = intParam('minProximal') || 10,
     maxProximal = intParam('maxProximal') || 1000,
-    snapshotClass = (strParam('snapshotClass') == "TestNetworkSnapshot") ? TestNetworkSnapshot : LocalSnapshot,
-    loadRegionTimeoutDuration = intParam('loadRegionTimeoutDuration') || 0;
+    layerClass = (strParam('layerClass') == "TestNetworkLayer") ? TestNetworkLayer : TestLocalLayer,
+    loadLayersTimeoutDuration = intParam('loadLayersTimeoutDuration') || 0;
 
 var container = $('#container');
 
 var history = new History();
-var model = new TestModel(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, snapshotClass);
+var model = new TestModel();
 var visualization = new ThreeDVisualization(container, history);
 
-visualization.loadRegionTimeoutDuration = loadRegionTimeoutDuration;
+visualization.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
 visualization.render();
 
-runFakeModel();
+initFakeData();
+runModel();
 
+/* Functions */
 
-function runFakeModel() {
+function initFakeData() {
+    for (var i = 0; i < 25; i++) {
+        var inputLayer  = new layerClass(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, null);
+            outputLayer = new layerClass(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, inputLayer);
+
+        model.pushInputLayer(inputLayer);
+        model.pushOutputLayer(outputLayer);
+    }
+}
+
+function runModel() {
     setTimeout(function() {
-        var input = new TestInput([7, 10], 5, 0, 100);
-
-        model.run(input, function(error, snapshot) {
+        model.getNextSnapshot(function(error, snapshot) {
             history.addSnapshot(snapshot);
             visualization.historyUpdated();
 
-            runFakeModel();
+            runModel();
         });
     }, 1000);
 }
+
+/* Utilities */
 
 function intParam(key) {
     return Number(strParam(key));

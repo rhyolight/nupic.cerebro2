@@ -1,9 +1,28 @@
 var AbstractModel = Fiber.extend(function() {
     return {
-        init: function() {},
+        init: function() {
+            this.inputLayers = [];
+        },
 
-        /* To override */
+        /* Public */
 
-        run: function(input, callback) { callback(null, null); },
+        pushInputLayer: function(inputLayer) {
+            this.inputLayers.push(inputLayer);
+        },
+
+        popInputLayer: function() {
+            return this.inputLayers.pop();
+        },
+
+        /* To override
+            Note: callbacks params follow Node.js convention of (error, retVal)
+        */
+
+        getNextSnapshot: function(callback) {
+            /* Return:
+                A Snapshot
+            */
+            callback(null, null);
+        }
     };
 });

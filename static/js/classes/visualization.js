@@ -21,8 +21,8 @@ var Visualization = Fiber.extend(function() {
             this.lastIteration = this.iteration;
 
             this.snapshot = null;
-            this.loadRegionTimeout = null;
-            this.loadRegionTimeoutDuration = 500; // default (in ms)
+            this.loadLayersTimeout = null;
+            this.loadLayersTimeoutDuration = 500; // default (in ms)
             this.activeCells = [];
             this.predictiveCells = [];
             this.proximalSynapses = [];
@@ -66,9 +66,9 @@ var Visualization = Fiber.extend(function() {
 
         /* To Override */
 
-        setupRegion:  function() {},
-        clearRegion:  function() {},
-        updateRegion: function() {},
+        setupDrawing:  function() {},
+        clearDrawing:  function() {},
+        updateDrawing: function() {},
 
         /* Private */
 
@@ -137,7 +137,7 @@ var Visualization = Fiber.extend(function() {
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1);
 
-            var callback = _.bind(this.updateRegion, this);
+            var callback = _.bind(this.updateDrawing, this);
 
             var viewFolder = gui.addFolder('View');
             viewFolder.add(this, 'showActiveCells').onChange(callback);
@@ -158,14 +158,17 @@ var Visualization = Fiber.extend(function() {
 
             this.snapshot = snapshot;
 
-            this._loadRegion();
+            this._loadLayers();
 
-            if (lastSnapshot && _.isEqual(snapshot.getRegionDimensions(), lastSnapshot.getRegionDimensions())) {
-                this.updateRegion();
+            if (lastSnapshot &&
+                _.isEqual(snapshot.getInputLayer().getDimensions(),  lastSnapshot.getInputLayer().getDimensions()) &&
+                _.isEqual(snapshot.getOutputLayer().getDimensions(), lastSnapshot.getOutputLayer().getDimensions())
+            ) {
+                this.updateDrawing();
             }
             else {
-                this.clearRegion();
-                this.setupRegion();
+                this.clearDrawing();
+                this.setupDrawing();
             }
         },
 
@@ -176,11 +179,13 @@ var Visualization = Fiber.extend(function() {
             }
         },
 
-        _loadRegion: function() {
+        _loadLayers: function() {
+            // TODO: should also load parts of input layer
             var self = this,
                 snapshot = this.snapshot,
-                timeout = this.loadRegionTimeout,
-                timeoutDuration = this.loadRegionTimeoutDuration;
+                outputLayer = snapshot.getOutputLayer(),
+                timeout = this.loadLayersTimeout,
+                timeoutDuration = this.loadLayersTimeoutDuration;
 
             self.activeCells = [];
             self.predictiveCells = [];
@@ -188,29 +193,29 @@ var Visualization = Fiber.extend(function() {
             if (timeout) clearTimeout(timeout);
 
             timeout = setTimeout(function() {
-                snapshot.getActiveCells(_.bind(function(error, activeCells) {
+                outputLayer.getActiveCells(_.bind(function(error, activeCells) {
                     if (self.snapshot != this) return;
 
                     self.activeCells = activeCells;
-                    self.updateRegion();
+                    self.updateDrawing();
                 }, snapshot));
 
-                snapshot.getPredictiveCells(_.bind(function(error, predictiveCells) {
+                outputLayer.getPredictiveCells(_.bind(function(error, predictiveCells) {
                     if (self.snapshot != this) return;
 
                     self.predictiveCells = predictiveCells;
-                    self.updateRegion();
+                    self.updateDrawing();
                 }, snapshot));
 
-                snapshot.getProximalSynapses(_.bind(function(error, proximalSynapses) {
+                outputLayer.getProximalSynapses(_.bind(function(error, proximalSynapses) {
                     if (self.snapshot != this) return;
 
                     self.proximalSynapses = proximalSynapses;
-                    self.updateRegion();
+                    self.updateDrawing();
                 }, snapshot));
             }, timeoutDuration);
 
-            this.loadRegionTimeout = timeout;
+            this.loadLayersTimeout = timeout;
         },
 
     };

@@ -1,3 +1,4 @@
+// TODO: support showing output and input layers
 var ThreeDVisualization = Visualization.extend(function(base) {
     return {
         init: function(container, history) {
@@ -8,12 +9,17 @@ var ThreeDVisualization = Visualization.extend(function(base) {
 
         /* Overrides */
 
-        setupRegion: function() {
+        setupDrawing: function() {
             var paddingX = 100,
                 paddingY = 100,
                 paddingZ = 25,
-                dimensions = this.snapshot.getRegionDimensions(),
-                numX = dimensions[0],
+                dimensions = this.snapshot.getOutputLayer().getDimensions();
+
+            if (dimensions.length != 3) {
+                throw new Error("ThreeDVisualization only supports 3-dimensional layers");
+            }
+
+            var numX = dimensions[0],
                 numY = dimensions[1],
                 numZ = dimensions[2],
                 originX = -(numX * paddingX) / 2,
@@ -54,13 +60,13 @@ var ThreeDVisualization = Visualization.extend(function(base) {
             this.particleSystem = particleSystem;
         },
 
-        clearRegion: function() {
+        clearDrawing: function() {
             if (!this.particleSystem) return;
 
             this.scene.remove(this.particleSystem);
         },
 
-        updateRegion: function() {
+        updateDrawing: function() {
             if (!this.particleSystem) return;
 
             var particles = this.particleSystem.geometry,
@@ -81,7 +87,7 @@ var ThreeDVisualization = Visualization.extend(function(base) {
             }
 
             if (this.showProximalSynapses) {
-                console.log(this.snapshot.getInput().getDimensions());
+                console.log(this.snapshot.getInputLayer().getDimensions());
                 console.log(proximalSynapses);
             }
         }

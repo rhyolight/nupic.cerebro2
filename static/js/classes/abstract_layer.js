@@ -1,16 +1,11 @@
-var AbstractSnapshot = Fiber.extend(function() {
+var AbstractLayer = Fiber.extend(function() {
     return {
-        init: function(input, regionDimensions) {
-            this.input = input;
-            this.regionDimensions = regionDimensions;
+        init: function(dimensions) {
+            this.dimensions = dimensions;
         },
 
-        getInput: function() {
-            return this.input;
-        },
-        
-        getRegionDimensions: function() {
-            return _.clone(this.regionDimensions);
+        getDimensions: function() {
+            return _.clone(this.dimensions);
         },
 
         /* To override
