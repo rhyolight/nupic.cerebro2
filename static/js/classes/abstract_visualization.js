@@ -137,8 +137,9 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1);
 
-            var updateCells = _.bind(this.outputDrawing.updateCells, this);
-            var updateProximalSynapses = _.bind(this.outputDrawing.updateProximalSynapses, this);
+            var outputDrawing = this.outputDrawing,
+                updateCells = _.bind(outputDrawing.updateCells, outputDrawing);
+                updateProximalSynapses = _.bind(outputDrawing.updateProximalSynapses, outputDrawing);
 
             var viewFolder = gui.addFolder('View');
             viewFolder.add(this.outputDrawing, 'showActiveCells').onChange(updateCells);

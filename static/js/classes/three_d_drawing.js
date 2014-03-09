@@ -102,6 +102,8 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 proximalSynapses = this.proximalSynapses,
                 showProximalSynapses = this.showProximalSynapses;
 
+            if (this.proximalLines) this.scene.remove(this.proximalLines);
+                
             if (showProximalSynapses && inputDrawing) {
                 var geometry = new THREE.Geometry(),
                     material = new THREE.LineBasicMaterial({vertexColors: THREE.VertexColors});
@@ -125,7 +127,6 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
 
                 var line = new THREE.Line(geometry, material, THREE.LinePieces);
 
-                if (this.proximalLines) this.scene.remove(this.proximalLines);
                 this.scene.add(line);
 
                 this.proximalLines = line;
