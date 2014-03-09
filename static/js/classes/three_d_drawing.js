@@ -43,8 +43,6 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 particleSystem = new THREE.ParticleSystem(particles, material);
 
             particleSystem.sortParticles = true;
-            // TODO: figure out how to achieve this effect without breaking proximal connections
-            // particleSystem.rotation.x = -(Math.PI / 2);
 
             for (var x = 0; x < numX; x++) {
                 for (var y = 0; y < numY; y++) {
