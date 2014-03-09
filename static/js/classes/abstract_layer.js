@@ -32,12 +32,12 @@ var AbstractLayer = Fiber.extend(function() {
 
         getProximalSynapses: function(callback) {
             /* Return:
-                A list of indices, one for each cell with permanence > 0
-                    Example: [10,   79,    497, ...])
-                A list of floats, one for each index above, representing permanence value
-                    Example: [0.34, 0.745, 0.22, ...]
+                A list of proximal connections, each represented by a list: [toIndex, fromIndex, permanence]
+                    ...where fromIndex is the index of a cell in the input layer,
+                             toIndex is the index of a cell in the current layer,
+                             permanence is the permanence value of the proximal connection.
             */
-            callback(null, [], []);
+            callback(null, []);
         }
     };
 });

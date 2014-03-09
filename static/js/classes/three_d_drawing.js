@@ -8,6 +8,7 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
             this.originZ = originZ;
 
             this.particleSystem = null;
+            this.proximalLines = null;
         },
 
         /* Public */
@@ -42,7 +43,8 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 particleSystem = new THREE.ParticleSystem(particles, material);
 
             particleSystem.sortParticles = true;
-            particleSystem.rotation.x = -(Math.PI / 2);
+            // TODO: figure out how to achieve this effect without breaking proximal connections
+            // particleSystem.rotation.x = -(Math.PI / 2);
 
             for (var x = 0; x < numX; x++) {
                 for (var y = 0; y < numY; y++) {
@@ -92,13 +94,41 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
         },
 
         updateProximalSynapses: function() {
-            var proximalSynapses = this.proximalSynapses,
-                showProximalSynapses = this.showProximalSynapses,
-                inputDrawing = this.inputDrawing;
+            if (!this.particleSystem) return;
+
+            var inputDrawing = this.inputDrawing,
+                particles = this.particleSystem.geometry.vertices,
+                inputParticles = inputDrawing.getParticles(),
+                proximalSynapses = this.proximalSynapses,
+                showProximalSynapses = this.showProximalSynapses;
 
             if (showProximalSynapses && inputDrawing) {
-                console.log(inputDrawing.getParticles().length);
-                console.log(proximalSynapses);
+                var geometry = new THREE.Geometry(),
+                    material = new THREE.LineBasicMaterial({vertexColors: THREE.VertexColors});
+
+                for (var i = 0; i < proximalSynapses.length; i++) {
+                    var synapse = proximalSynapses[i],
+                        toIndex = synapse[0],
+                        fromIndex = synapse[1],
+                        permanence = synapse[2],
+                        toParticle = particles[toIndex],
+                        fromParticle = inputParticles[fromIndex],
+                        toColor = new THREE.Color(0x0000FF).multiplyScalar(permanence),
+                        fromColor = new THREE.Color(0xFF0000).multiplyScalar(permanence);
+
+                    geometry.vertices.push(toParticle);
+                    geometry.vertices.push(fromParticle);
+
+                    geometry.colors.push(toColor);
+                    geometry.colors.push(fromColor);
+                }
+
+                var line = new THREE.Line(geometry, material, THREE.LinePieces);
+
+                if (this.proximalLines) this.scene.remove(this.proximalLines);
+                this.scene.add(line);
+
+                this.proximalLines = line;
             }
         },
 

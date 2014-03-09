@@ -23,10 +23,10 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
                 numPredictiveCells = _.random(1, total * predictiveSparsity);
 
             var activeCells = _(numActiveCells).times(function() {
-                    return _.random(total);
+                    return _.random(total - 1);
                 }),
                 predictiveCells = _(numPredictiveCells).times(function() {
-                    return _.random(total);
+                    return _.random(total - 1);
                 });
 
             this.dimensions = [x, y, z];
@@ -39,20 +39,19 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
         _connectToInputLayer: function(minProximal, maxProximal, inputLayer) {
             if (!inputLayer) return;
 
-            var inputDimensions = inputLayer.getDimensions();
+            var inputDimensions = inputLayer.getDimensions(),
+                dimensions = this.dimensions;
 
-            if (inputDimensions.length != 3) {
+            if (inputDimensions.length != 3 || dimensions.length != 3) {
                 throw new Error("TestLocalLayer only supports 3-dimensional input layers");
             }
 
-            var inputX = inputDimensions[0],
-                inputY = inputDimensions[1],
-                inputZ = inputDimensions[2],
-                inputTotal = inputX * inputY * inputZ;
+            var inputTotal = inputDimensions[0] * inputDimensions[1] * inputDimensions[2],
+                total = dimensions[0] * dimensions[1] * dimensions[2];
 
             var numProximal = _.random(Math.min(minProximal, inputTotal), Math.min(maxProximal, inputTotal)),
                 proximalSynapses = _(numProximal).times(function() {
-                    return _.random(100) / 100;
+                    return [_.random(total - 1), _.random(inputTotal - 1), _.random(100) / 100];
                 });
 
             this.proximalSynapses = proximalSynapses;
