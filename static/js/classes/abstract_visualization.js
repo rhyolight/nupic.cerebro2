@@ -213,7 +213,11 @@ var AbstractVisualization = Fiber.extend(function() {
                 timeoutDuration = this.loadLayersTimeoutDuration;
 
             inputDrawing.reset();
+            inputDrawing.updateCells();
+
             outputDrawing.reset();
+            outputDrawing.updateCells();
+            outputDrawing.updateProximalSynapses();
 
             if (timeout) clearTimeout(timeout);
 
