@@ -11,6 +11,18 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
             this.proximalLines = null;
         },
 
+        setLayerDimensions: function(layerDimensions) {
+            if (layerDimensions.length > 3) {
+                throw new Error("ThreeDVisualization only supports up to 3-dimensional layers");
+            }
+
+            while (layerDimensions.length < 3) {
+                layerDimensions.push(1);
+            }
+
+            base.setLayerDimensions.call(this, layerDimensions);
+        },
+
         /* Public */
 
         setup: function() {
