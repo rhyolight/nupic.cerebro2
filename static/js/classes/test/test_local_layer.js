@@ -1,7 +1,10 @@
 var TestLocalLayer = LocalLayer.extend(function(base) {
     return {
-        init: function(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, inputLayer) {
-            this._generate(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, inputLayer);
+        init: function(params, inputLayer) {
+            this.params = params;
+            this.inputLayer = inputLayer;
+
+            this._generate();
 
             var dimensions       = this.dimensions,
                 activeColumns    = this.activeColumns,
@@ -15,8 +18,20 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
 
         /* Private */
 
-        _generate: function(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, inputLayer) {
-            var x = _.random(minX, maxX),
+        _generate: function() {
+            var params = this.params,
+                minX = params.minX,
+                maxX = params.maxX,
+                minY = params.minY,
+                maxY = params.maxY,
+                minZ = params.minZ,
+                maxZ = params.maxZ,
+                activeSparsity = params.activeSparsity,
+                predictiveSparsity = params.predictiveSparsity,
+                minProximal = params.minProximal,
+                maxProximal = params.maxProximal,
+                inputLayer = this.inputLayer,
+                x = _.random(minX, maxX),
                 y = _.random(minY, maxY),
                 z = _.random(minZ, maxZ),
                 total = x * y * z;
@@ -35,13 +50,18 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
             this.activeCells = activeCells;
             this.predictiveCells = predictiveCells;
 
-            this._connectToInputLayer(minProximal, maxProximal, inputLayer);
+            this._connectToInputLayer();
         },
 
-        _connectToInputLayer: function(minProximal, maxProximal, inputLayer) {
+        _connectToInputLayer: function() {
+            var inputLayer = this.inputLayer;
+
             if (!inputLayer) return;
 
-            var inputDimensions = inputLayer.getDimensions(),
+            var params = this.params,
+                minProximal = params.minProximal,
+                maxProximal = params.maxProximal,
+                inputDimensions = inputLayer.getDimensions(),
                 dimensions = this.dimensions;
 
             if (inputDimensions.length != 3 || dimensions.length != 3) {
