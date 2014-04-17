@@ -6,6 +6,7 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
 
             this.inputDimensions = null;
             this.outputDimensions = null;
+            self.numIterations = 0;
             this.numSnapshots = 0;
 
             this.getDimensions();
@@ -13,6 +14,10 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
 
         getDimensions: function() {
             var self = this;
+
+            self.getJSON("num_iterations", function(error, numIterations) {
+                self.numIterations = numIterations;
+            });
 
             self.getJSON("input/dimensions", function(error, inputDimensions) {
                 self.inputDimensions = inputDimensions;
@@ -29,8 +34,7 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
             var inputDimensions = this.inputDimensions,
                 outputDimensions = this.outputDimensions;
 
-            // TODO: Remove numSnapshots <= 10 limitation
-            if (!inputDimensions || !outputDimensions || this.numSnapshots > 10) {
+            if (!inputDimensions || !outputDimensions || this.numSnapshots >= this.numIterations) {
                 callback(null, null);
                 return;
             }

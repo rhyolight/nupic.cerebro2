@@ -13,8 +13,6 @@ var NetworkLayer = AbstractLayer.extend(function(base) {
                 iteration = this.iteration;
 
             self.getJSON(layer + "/" + iteration + "/" + type, function(error, list) {
-                console.log(layer + "/" + iteration + "/" + type);
-                console.log(list);
                 callback(null, list);
             });
         },
