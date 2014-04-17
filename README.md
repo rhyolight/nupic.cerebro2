@@ -13,7 +13,7 @@ You can the visit the following URLs in your browser:
     http://localhost:8000
 
     // Random models demo
-    http://localhost:8000/#minX=1&maxX=50&minY=1&maxY=25&minZ=3&maxZ=5
+    http://localhost:8000/#modelClass=TestModel&minX=1&maxX=50&minY=1&maxY=25&minZ=3&maxZ=5
 
     // Network demo
-    http://localhost:8000/#layerClass=TestNetworkLayer&loadLayersTimeoutDuration=500
+    http://localhost:8000/#modelClass=TestModel&layerClass=TestNetworkLayer&loadLayersTimeoutDuration=500

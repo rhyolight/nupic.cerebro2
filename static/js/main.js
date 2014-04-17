@@ -13,13 +13,14 @@ var params = {
         minProximal: intParam('minProximal') || 10,
         maxProximal: intParam('maxProximal') || 1000
     },
+    loadLayersTimeoutDuration = intParam('loadLayersTimeoutDuration') || 0,
+    modelURL = strParam('modelURL') || defaultModelURL(),
     layerClass = (strParam('layerClass') == "TestNetworkLayer") ? TestNetworkLayer : TestLocalLayer,
-    loadLayersTimeoutDuration = intParam('loadLayersTimeoutDuration') || 0;
+    model = strParam('modelClass') == "TestModel" ? new TestModel(layerClass) : new NetworkReadonlyModel(modelURL);
 
 var container = $('#container');
 
 var history = new History();
-var model = new TestModel();
 var visualization = new ThreeDVisualization(container, history);
 
 visualization.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
@@ -54,4 +55,8 @@ function intParam(key) {
 
 function strParam(key) {
     return $.url().fparam(key);
+}
+
+function defaultModelURL() {
+    return "http://" + window.location.hostname + ":9090/_model";
 }
