@@ -46,6 +46,18 @@ var AbstractLayer = Fiber.extend(function() {
                              permanence is the permanence value of the proximal connection.
             */
             callback(null, []);
+        },
+
+        getDistalSynapses: function(callback) {
+            /* Return:
+                A list of distal connections, each represented by a list: [toIndex, fromIndex, permanence]
+                    ...where fromIndex is the index of a cell in the current layer,
+                             toIndex is the index of a cell in the current layer,
+                             permanence is the permanence value of the distal connection.
+
+                TODO: Verify that this makes sense.
+            */
+            callback(null, []);
         }
     };
 });
