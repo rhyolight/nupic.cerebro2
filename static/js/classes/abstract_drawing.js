@@ -7,6 +7,7 @@ var AbstractDrawing = Fiber.extend(function() {
             this.inputDrawing = null;
             this.reset();
 
+            this.showActiveColumns = true;
             this.showActiveCells = true;
             this.showPredictiveCells = true;
             this.showProximalSynapses = true;
@@ -22,6 +23,10 @@ var AbstractDrawing = Fiber.extend(function() {
             this.inputDrawing = inputDrawing;
         },
 
+        setActiveColumns: function(activeColumns) {
+            this.activeColumns = activeColumns;
+        },
+
         setActiveCells: function(activeCells) {
             this.activeCells = activeCells;
         },
@@ -35,6 +40,7 @@ var AbstractDrawing = Fiber.extend(function() {
         },
 
         reset: function() {
+            this.activeColumns = [];
             this.activeCells = [];
             this.predictiveCells = [];
             this.proximalSynapses = [];

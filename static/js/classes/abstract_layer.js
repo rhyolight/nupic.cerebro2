@@ -14,6 +14,14 @@ var AbstractLayer = Fiber.extend(function() {
             Note: callbacks params follow Node.js convention of (error, retVal)
         */
 
+        getActiveColumns: function(callback) {
+            /* Return:
+                A list of indices, one for each active column
+                    Example: [2, 5, 9, ...]
+            */
+            callback(null, []);
+        },
+
         getActiveCells: function(callback) {
             /* Return:
                 A list of indices, one for each active cell

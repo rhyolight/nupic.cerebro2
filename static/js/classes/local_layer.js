@@ -1,8 +1,9 @@
 var LocalLayer = AbstractLayer.extend(function(base) {
     return {
-        init: function(dimensions, activeCells, predictiveCells, proximalSynapses) {
+        init: function(dimensions, activeColumns, activeCells, predictiveCells, proximalSynapses) {
             base.init.call(this, dimensions);
 
+            this.activeColumns = activeColumns;
             this.activeCells = activeCells;
             this.predictiveCells = predictiveCells;
             this.proximalSynapses = proximalSynapses;
@@ -10,6 +11,10 @@ var LocalLayer = AbstractLayer.extend(function(base) {
 
         /* Public */
         
+        getActiveColumns: function(callback) {
+            callback(null, _.clone(this.activeColumns));
+        },
+
         getActiveCells: function(callback) {
             callback(null, _.clone(this.activeCells));
         },

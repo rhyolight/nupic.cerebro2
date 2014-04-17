@@ -2,6 +2,14 @@ var TestNetworkLayer = TestLocalLayer.extend(function() {
     return {
         /* Public */
         
+        getActiveColumns: function(callback) {
+            var self = this;
+
+            setTimeout(function() {
+                callback(null, _.clone(self.activeColumns));
+            }, 1500);
+        },
+
         getActiveCells: function(callback) {
             var self = this;
 
