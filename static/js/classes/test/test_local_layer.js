@@ -26,6 +26,7 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
                 maxY = params.maxY,
                 minZ = params.minZ,
                 maxZ = params.maxZ,
+                columnSparsity = params.columnSparsity,
                 activeSparsity = params.activeSparsity,
                 predictiveSparsity = params.predictiveSparsity,
                 minProximal = params.minProximal,
@@ -34,19 +35,25 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
                 x = _.random(minX, maxX),
                 y = _.random(minY, maxY),
                 z = _.random(minZ, maxZ),
-                total = x * y * z;
+                numColumns = x * y;
+                numCells = x * y * z;
 
-            var numActiveCells = _.random(1, total * activeSparsity),
-                numPredictiveCells = _.random(1, total * predictiveSparsity);
+            var numActiveColumns = _.random(1, numColumns * columnSparsity),
+                numActiveCells = _.random(1, numCells * activeSparsity),
+                numPredictiveCells = _.random(1, numCells * predictiveSparsity);
 
-            var activeCells = _(numActiveCells).times(function() {
-                    return _.random(total - 1);
+            var activeColumns = _(numActiveColumns).times(function() {
+                    return _.random(numColumns - 1);
+                }),
+                activeCells = _(numActiveCells).times(function() {
+                    return _.random(numCells - 1);
                 }),
                 predictiveCells = _(numPredictiveCells).times(function() {
-                    return _.random(total - 1);
+                    return _.random(numCells - 1);
                 });
 
             this.dimensions = [x, y, z];
+            this.activeColumns = activeColumns;
             this.activeCells = activeCells;
             this.predictiveCells = predictiveCells;
 

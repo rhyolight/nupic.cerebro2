@@ -7,6 +7,7 @@ var params = {
         maxY: intParam('maxY') || 25,
         minZ: intParam('minZ') || 5,
         maxZ: intParam('maxZ') || 5,
+        columnSparsity: intParam('columnSparsity') || 0.1,
         activeSparsity: intParam('activeSparsity') || 0.1,
         predictiveSparsity: intParam('predictiveSparsity') || 0.2,
         minProximal: intParam('minProximal') || 10,

@@ -72,18 +72,27 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
         updateCells: function() {
             if (!this.particleSystem) return;
 
-            var particles = this.particleSystem.geometry,
+            var dimensions = this.layerDimensions,
+                numZ = dimensions[2],
+                particles = this.particleSystem.geometry,
+                activeColumns = this.activeColumns,
                 activeCells = this.activeCells,
                 predictiveCells = this.predictiveCells,
+                showActiveColumns = this.showActiveColumns,
                 showActiveCells = this.showActiveCells,
                 showPredictiveCells = this.showPredictiveCells;
 
             for (var i = 0; i < particles.vertices.length; i++) {
+                var column = Math.floor(i / numZ);
+
                 if (showActiveCells && _.contains(activeCells, i)) {
-                    particles.colors[i].setHex(0xFFFFFF);
+                    particles.colors[i].setHex(0x006400);
                 }
                 else if (showPredictiveCells && _.contains(predictiveCells, i)) {
                     particles.colors[i].setHex(0xAA0000);
+                }
+                else if (showActiveColumns && _.contains(activeColumns, column)) {
+                    particles.colors[i].setHex(0xFFFFFF);
                 }
                 else {
                     particles.colors[i].setHex(0x222222);
