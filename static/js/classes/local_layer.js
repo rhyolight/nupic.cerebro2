@@ -1,12 +1,13 @@
 var LocalLayer = AbstractLayer.extend(function(base) {
     return {
-        init: function(dimensions, activeColumns, activeCells, predictiveCells, proximalSynapses) {
+        init: function(dimensions, activeColumns, activeCells, predictiveCells, proximalSynapses, distalSynapses) {
             base.init.call(this, dimensions);
 
-            this.activeColumns = activeColumns;
-            this.activeCells = activeCells;
-            this.predictiveCells = predictiveCells;
+            this.activeColumns    = activeColumns;
+            this.activeCells      = activeCells;
+            this.predictiveCells  = predictiveCells;
             this.proximalSynapses = proximalSynapses;
+            this.distalSynapses   = distalSynapses;
         },
 
         /* Public */
@@ -25,6 +26,10 @@ var LocalLayer = AbstractLayer.extend(function(base) {
 
         getProximalSynapses: function(callback) {
             callback(null, _.clone(this.proximalSynapses));
+        },
+
+        getDistalSynapses: function(callback) {
+            callback(null, _.clone(this.distalSynapses));
         }
     };
 });

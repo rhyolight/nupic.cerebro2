@@ -32,6 +32,14 @@ var TestNetworkLayer = TestLocalLayer.extend(function() {
             setTimeout(function() {
                 callback(null, _.clone(self.proximalSynapses));
             }, 3500);
+        },
+
+        getDistalSynapses: function(callback) {
+            var self = this;
+
+            setTimeout(function() {
+                callback(null, _.clone(self.distalSynapses));
+            }, 3500);
         }
     };
 });

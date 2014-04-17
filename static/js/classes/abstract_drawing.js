@@ -11,6 +11,7 @@ var AbstractDrawing = Fiber.extend(function() {
             this.showActiveCells = true;
             this.showPredictiveCells = true;
             this.showProximalSynapses = true;
+            this.showDistalSynapses = true;
         },
 
         /* Public */
@@ -39,11 +40,16 @@ var AbstractDrawing = Fiber.extend(function() {
             this.proximalSynapses = proximalSynapses;
         },
 
+        setDistalSynapses: function(distalSynapses) {
+            this.distalSynapses = distalSynapses;
+        },
+
         reset: function() {
             this.activeColumns = [];
             this.activeCells = [];
             this.predictiveCells = [];
             this.proximalSynapses = [];
+            this.distalSynapses = [];
         },
 
         /* To override */
@@ -54,6 +60,8 @@ var AbstractDrawing = Fiber.extend(function() {
 
         updateCells: function() {},
 
-        updateProximalSynapses: function() {}
+        updateProximalSynapses: function() {},
+
+        updateDistalSynapses: function() {}
     };
 });

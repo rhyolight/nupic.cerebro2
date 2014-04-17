@@ -3,13 +3,14 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
         init: function(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, inputLayer) {
             this._generate(minX, maxX, minY, maxY, minZ, maxZ, activeSparsity, predictiveSparsity, minProximal, maxProximal, inputLayer);
 
-            var dimensions = this.dimensions,
-                activeColumns = this.activeColumns,
-                activeCells = this.activeCells,
-                predictiveCells = this.predictiveCells,
+            var dimensions       = this.dimensions,
+                activeColumns    = this.activeColumns,
+                activeCells      = this.activeCells,
+                predictiveCells  = this.predictiveCells,
                 proximalSynapses = this.proximalSynapses;
+                distalSynapses   = this.distalSynapses;
 
-            base.init.call(this, dimensions, activeColumns, activeCells, predictiveCells, proximalSynapses);
+            base.init.call(this, dimensions, activeColumns, activeCells, predictiveCells, proximalSynapses, distalSynapses);
         },
 
         /* Private */
