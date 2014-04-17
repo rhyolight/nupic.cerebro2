@@ -4,9 +4,19 @@ var TestModel = AbstractModel.extend(function(base) {
             base.init.call(this);
 
             this.outputLayers = [];
+
+            this.initFakeData();
         },
 
-        /* Public */
+        initFakeData: function() {
+            for (var i = 0; i < 25; i++) {
+                var inputLayer  = new layerClass(params, null);
+                    outputLayer = new layerClass(params, inputLayer);
+
+                this.pushInputLayer(inputLayer);
+                this.pushOutputLayer(outputLayer);
+            }
+        },
 
         pushOutputLayer: function(outputLayer) {
             this.outputLayers.push(outputLayer);
@@ -15,6 +25,8 @@ var TestModel = AbstractModel.extend(function(base) {
         popOutputLayer: function() {
             return this.outputLayers.pop();
         },
+
+        /* Public */
 
         getNextSnapshot: function(callback) {
             var inputLayer = this.popInputLayer();
@@ -31,7 +43,9 @@ var TestModel = AbstractModel.extend(function(base) {
 
             var snapshot = new Snapshot(inputLayer, outputLayer);
 
-            callback(null, snapshot);
+            setTimeout(function() {
+                callback(null, snapshot);
+            }, 500);
         }
     };
 });

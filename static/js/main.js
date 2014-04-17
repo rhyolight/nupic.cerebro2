@@ -25,32 +25,25 @@ var visualization = new ThreeDVisualization(container, history);
 visualization.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
 visualization.render();
 
-initFakeData();
 runModel();
 
 /* Functions */
 
-function initFakeData() {
-    for (var i = 0; i < 25; i++) {
-        var inputLayer  = new layerClass(params, null);
-            outputLayer = new layerClass(params, inputLayer);
-
-        model.pushInputLayer(inputLayer);
-        model.pushOutputLayer(outputLayer);
-    }
-}
-
 function runModel() {
-    setTimeout(function() {
-        model.getNextSnapshot(function(error, snapshot) {
-            if (snapshot) {
-                history.addSnapshot(snapshot);
-                visualization.historyUpdated();
-            }
+    model.getNextSnapshot(function(error, snapshot) {
+        var delay = 1000;
 
+        if (snapshot) {
+            history.addSnapshot(snapshot);
+            visualization.historyUpdated();
+
+            delay = 0;
+        }
+
+        setTimeout(function() {
             runModel();
-        });
-    }, 1000);
+        }, delay);
+    });
 }
 
 /* Utilities */
