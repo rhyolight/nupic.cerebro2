@@ -1,8 +1,9 @@
 var TestModel = AbstractModel.extend(function(base) {
     return {
-        init: function(layerClass) {
+        init: function(layerClass, params) {
             base.init.call(this);
             this.layerClass = layerClass;
+            this.params = params;
 
             this.outputLayers = [];
 
@@ -12,6 +13,7 @@ var TestModel = AbstractModel.extend(function(base) {
         initFakeData: function() {
             for (var i = 0; i < 25; i++) {
                 var layerClass = this.layerClass,
+                    params = this.params,
                     inputLayer  = new layerClass(params, null);
                     outputLayer = new layerClass(params, inputLayer);
 

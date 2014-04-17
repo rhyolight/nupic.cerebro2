@@ -16,7 +16,7 @@ var params = {
     loadLayersTimeoutDuration = intParam('loadLayersTimeoutDuration') || 0,
     modelURL = strParam('modelURL') || defaultModelURL(),
     layerClass = (strParam('layerClass') == "TestNetworkLayer") ? TestNetworkLayer : TestLocalLayer,
-    model = strParam('modelClass') == "TestModel" ? new TestModel(layerClass) : new NetworkReadonlyModel(modelURL);
+    model = strParam('modelClass') == "TestModel" ? new TestModel(layerClass, params) : new NetworkReadonlyModel(modelURL);
 
 var container = $('#container');
 
