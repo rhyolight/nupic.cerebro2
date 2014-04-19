@@ -17,3 +17,7 @@ You can the visit the following URLs in your browser:
 
     // Network demo
     http://localhost:8000/#modelClass=TestModel&layerClass=TestNetworkLayer&loadLayersTimeoutDuration=500
+
+## Todo
+
+* Fix bug with manually typing in iteration number in the control box
