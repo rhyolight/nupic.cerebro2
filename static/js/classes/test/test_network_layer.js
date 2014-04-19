@@ -18,11 +18,11 @@ var TestNetworkLayer = TestLocalLayer.extend(function() {
             }, 1500);
         },
 
-        getPredictiveCells: function(callback) {
+        getPredictedCells: function(callback) {
             var self = this;
 
             setTimeout(function() {
-                callback(null, _.clone(self.predictiveCells));
+                callback(null, _.clone(self.predictedCells));
             }, 2500);
         },
 

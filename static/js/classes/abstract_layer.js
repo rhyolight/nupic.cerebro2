@@ -30,9 +30,9 @@ var AbstractLayer = Fiber.extend(function() {
             callback(null, []);
         },
 
-        getPredictiveCells: function(callback) {
+        getPredictedCells: function(callback) {
             /* Return:
-                A list of indices, one for each predictive cell
+                A list of indices, one for each predicted cell
                     Example: [5, 74, 235, ...]
             */
             callback(null, []);

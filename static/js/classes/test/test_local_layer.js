@@ -9,11 +9,11 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
             var dimensions       = this.dimensions,
                 activeColumns    = this.activeColumns,
                 activeCells      = this.activeCells,
-                predictiveCells  = this.predictiveCells,
+                predictedCells  = this.predictedCells,
                 proximalSynapses = this.proximalSynapses;
                 distalSynapses   = this.distalSynapses;
 
-            base.init.call(this, dimensions, activeColumns, activeCells, predictiveCells, proximalSynapses, distalSynapses);
+            base.init.call(this, dimensions, activeColumns, activeCells, predictedCells, proximalSynapses, distalSynapses);
         },
 
         /* Private */
@@ -28,7 +28,7 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
                 maxZ = params.maxZ,
                 columnSparsity = params.columnSparsity,
                 activeSparsity = params.activeSparsity,
-                predictiveSparsity = params.predictiveSparsity,
+                predictedSparsity = params.predictedSparsity,
                 minProximal = params.minProximal,
                 maxProximal = params.maxProximal,
                 inputLayer = this.inputLayer,
@@ -40,7 +40,7 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
 
             var numActiveColumns = _.random(1, numColumns * columnSparsity),
                 numActiveCells = _.random(1, numCells * activeSparsity),
-                numPredictiveCells = _.random(1, numCells * predictiveSparsity);
+                numPredictedCells = _.random(1, numCells * predictedSparsity);
 
             var activeColumns = _(numActiveColumns).times(function() {
                     return _.random(numColumns - 1);
@@ -48,14 +48,14 @@ var TestLocalLayer = LocalLayer.extend(function(base) {
                 activeCells = _(numActiveCells).times(function() {
                     return _.random(numCells - 1);
                 }),
-                predictiveCells = _(numPredictiveCells).times(function() {
+                predictedCells = _(numPredictedCells).times(function() {
                     return _.random(numCells - 1);
                 });
 
             this.dimensions = [x, y, z];
             this.activeColumns = activeColumns;
             this.activeCells = activeCells;
-            this.predictiveCells = predictiveCells;
+            this.predictedCells = predictedCells;
 
             this._connectToInputLayer();
         },

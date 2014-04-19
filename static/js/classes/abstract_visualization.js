@@ -146,7 +146,7 @@ var AbstractVisualization = Fiber.extend(function() {
             var viewFolder = gui.addFolder('View');
             viewFolder.add(this.outputDrawing, 'showActiveColumns').onChange(updateCells);
             viewFolder.add(this.outputDrawing, 'showActiveCells').onChange(updateCells);
-            viewFolder.add(this.outputDrawing, 'showPredictiveCells').onChange(updateCells);
+            viewFolder.add(this.outputDrawing, 'showPredictedCells').onChange(updateCells);
             viewFolder.add(this.outputDrawing, 'showProximalSynapses').onChange(updateProximalSynapses);
             viewFolder.add(this.outputDrawing, 'showDistalSynapses').onChange(updateDistalSynapses);
 
@@ -247,10 +247,10 @@ var AbstractVisualization = Fiber.extend(function() {
                     self.outputDrawing.updateCells();
                 }, snapshot));
 
-                outputLayer.getPredictiveCells(_.bind(function(error, predictiveCells) {
+                outputLayer.getPredictedCells(_.bind(function(error, predictedCells) {
                     if (self.snapshot != this) return;
 
-                    self.outputDrawing.setPredictiveCells(predictiveCells);
+                    self.outputDrawing.setPredictedCells(predictedCells);
                     self.outputDrawing.updateCells();
                 }, snapshot));
 
