@@ -26,6 +26,10 @@ var NetworkLayer = AbstractLayer.extend(function(base) {
         getActiveCells: function(callback) {
             this.getList("active_cells", callback);
         },
+
+        getPredictedCells: function(callback) {
+            this.getList("predicted_cells", callback);
+        }
     };
 });
 
