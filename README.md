@@ -22,3 +22,4 @@ You can the visit the following URLs in your browser:
 
 * Fix bug with manually typing in iteration number in the control box
 * Keep updating the number of iterations for network readonly models
+* Show the active synapses in a different color
