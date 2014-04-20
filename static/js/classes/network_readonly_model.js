@@ -9,15 +9,20 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
             self.numIterations = 0;
             this.numSnapshots = 0;
 
+            this.getNumIterations();
             this.getDimensions();
         },
 
-        getDimensions: function() {
+        getNumIterations: function() {
             var self = this;
 
             self.getJSON("num_iterations", function(error, numIterations) {
                 self.numIterations = numIterations;
             });
+        },
+
+        getDimensions: function() {
+            var self = this;
 
             self.getJSON("input/dimensions", function(error, inputDimensions) {
                 self.inputDimensions = inputDimensions;
