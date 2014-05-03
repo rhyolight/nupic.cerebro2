@@ -33,12 +33,18 @@ var NetworkLayer = AbstractLayer.extend(function(base) {
 
         getProximalSynapses: function(callback) {
             var self = this,
-                dimensions = this.dimensions,
-                cellsPerColumn = dimensions[2];
+                dimensions = this.dimensions;
 
             this.getList("proximal_synapses", function(error, proximalSynapses) {
+                if (dimensions.length < 3) {
+                    callback(error, proximalSynapses);
+                    return;
+                }
+
+                // Convert each column index to index of first cell in the column
+                var cellsPerColumn = dimensions[2];
+
                 for (var i = 0; i < proximalSynapses.length; i++) {
-                    // Convert column index to index of first cell in the column
                     var synpase = proximalSynapses[i];
                     synpase[0] *= cellsPerColumn;
                     proximalSynapses[i] = synpase;
