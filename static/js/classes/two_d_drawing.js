@@ -5,7 +5,7 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
 
             this.originX = originX;
             this.originY = originY;
-            this.originZ = -1000; // TODO: This is a magic number to make the drawing visible
+            this.originZ = 0;
 
             this.particleSystem = null;
         },

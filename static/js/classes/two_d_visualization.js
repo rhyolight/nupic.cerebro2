@@ -7,6 +7,8 @@ var TwoDVisualization = AbstractVisualization.extend(function(base) {
                 far = 10000;
                 camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
 
+            camera.position.z = 1000;
+            
             return camera;
         },
 
