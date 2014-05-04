@@ -32,7 +32,7 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
         setup: function() {
             var paddingX = 100,
                 paddingY = 100,
-                paddingZ = 25,
+                paddingZ = 50,
                 dimensions = this.layerDimensions;
 
             if (dimensions.length != 3) {
