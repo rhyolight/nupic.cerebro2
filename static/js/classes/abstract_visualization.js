@@ -133,7 +133,12 @@ var AbstractVisualization = Fiber.extend(function() {
             domElement.addClass("controls");
             this.container.append(domElement);
 
-            this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1);
+            this.next = this._nextIteration;
+            this.prev = this._prevIteration;
+
+            this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
+            gui.add(this, 'next');
+            gui.add(this, 'prev');
 
             var outputDrawing = this.outputDrawing,
                 updateCells = _.bind(outputDrawing.updateCells, outputDrawing),
@@ -157,6 +162,14 @@ var AbstractVisualization = Fiber.extend(function() {
                 this._iterationUpdated();
                 this.lastIteration = this.iteration;
             }
+        },
+
+        _nextIteration: function() {
+            this.iteration = Math.min(this.iteration + 1, this.history.length());
+        },
+
+        _prevIteration: function() {
+            this.iteration = Math.max(this.iteration - 1, 0);
         },
 
         _iterationUpdated: function() {
