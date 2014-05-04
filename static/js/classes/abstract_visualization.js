@@ -16,6 +16,12 @@ var AbstractVisualization = Fiber.extend(function() {
             this.iteration = 0;
             this.lastIteration = this.iteration;
 
+            this.timer = null;
+            this.playing = false;
+
+            this.speed = 500;
+            this.maxSpeed = 1000;
+
             this.reshape = false;
 
             this.snapshot = null;
@@ -65,7 +71,64 @@ var AbstractVisualization = Fiber.extend(function() {
             }
         },
 
+        play: function() {
+            if (!this.playing) {
+                this._enableController('speed');
+                this._enableController('pause');
+                this._player();
+            } else {
+                this.pause();
+            }
+            for (var i = 0; i < this.gui.__controllers.length; i++) {
+                if (this.gui.__controllers[i].property === "play") {
+                    this.gui.__controllers[i].name( (this.playing) ? "play" : "pause");
+                }
+            }
+            this.playing = !this.playing;
+        },
+
+        pause: function() {
+            clearTimeout(this.timer);
+            this._disableController('speed');
+        },
+
         /* Private */
+
+        _player: function() {
+            this.timer = _.delay(function(_this){
+                _this.iteration++;
+                if(_this.iteration < _this.guiIteration.__max) {
+                    _this._player();
+                } else {
+                    _this.pause();
+                }
+            }, this._calculateSpeed(),this);
+        },
+
+        _calculateSpeed: function() {
+            return this.maxSpeed - this.speed;
+        },
+
+        _disableController: function(controllerName) {
+            // find the controller based on the name:
+            for (var i = 0; i < this.gui.__controllers.length; i++) {
+                if (this.gui.__controllers[i].property === controllerName) {
+                    if($(this.gui.__controllers[i].__li).children(".disabled").length > 0) {
+                        return;
+                    }
+                    $(this.gui.__controllers[i].__li).append("<div class='disabled'></div>");
+                }
+            }
+        },
+
+        _enableController: function(controllerName) {
+            // find the controller based on the name:
+            for (var i = 0; i < this.gui.__controllers.length; i++) {
+                if (this.gui.__controllers[i].property === controllerName) {
+                    $(this.gui.__controllers[i].__li).children().remove(".disabled");
+                }
+            }
+        },
 
         _initDrawings: function() {
             var container = this.container,
@@ -137,6 +200,8 @@ var AbstractVisualization = Fiber.extend(function() {
             this.prev = this._prevIteration;
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
+            gui.add(this, 'play');
+            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
             gui.add(this, 'next');
             gui.add(this, 'prev');
 
@@ -155,6 +220,9 @@ var AbstractVisualization = Fiber.extend(function() {
             viewFolder.add(this, 'reshape').onChange(reshapeUpdated);
 
             this.gui = gui;
+
+            // disable some controllers
+            this._disableController('speed');
         },
 
         _update: function() {
@@ -165,10 +233,12 @@ var AbstractVisualization = Fiber.extend(function() {
         },
 
         _nextIteration: function() {
+            this.pause();
             this.iteration = Math.min(this.iteration + 1, this.history.length());
         },
 
         _prevIteration: function() {
+            this.pause();
             this.iteration = Math.max(this.iteration - 1, 0);
         },
 
