@@ -33,9 +33,6 @@ var AbstractVisualization = Fiber.extend(function() {
             this._initStats();
             this._initGUI();
 
-            this._disableController('speed');
-            this._disableController('pause');
-
             this.historyUpdated();
         },
 
@@ -93,7 +90,6 @@ var AbstractVisualization = Fiber.extend(function() {
         pause: function() {
             clearTimeout(this.timer);
             this._disableController('speed');
-            this._disableController('pause');
         },
 
         /* Private */
@@ -115,7 +111,7 @@ var AbstractVisualization = Fiber.extend(function() {
 
         _disableController: function(controllerName) {
             // find the controller based on the name:
-            for (var i=0;i<this.gui.__controllers.length;i++) {
+            for (var i = 0; i < this.gui.__controllers.length; i++) {
                 if (this.gui.__controllers[i].property === controllerName) {
                     if($(this.gui.__controllers[i].__li).children(".disabled").length > 0) {
                         return;
@@ -127,7 +123,7 @@ var AbstractVisualization = Fiber.extend(function() {
 
         _enableController: function(controllerName) {
             // find the controller based on the name:
-            for (var i=0;i<this.gui.__controllers.length;i++) {
+            for (var i = 0; i < this.gui.__controllers.length; i++) {
                 if (this.gui.__controllers[i].property === controllerName) {
                     $(this.gui.__controllers[i].__li).children().remove(".disabled");
                 }
@@ -205,7 +201,7 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
             gui.add(this, 'play');
-            gui.add(this, 'speed',0,this.maxSpeed).step(1);
+            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
             gui.add(this, 'next');
             gui.add(this, 'prev');
 
@@ -224,6 +220,9 @@ var AbstractVisualization = Fiber.extend(function() {
             viewFolder.add(this, 'reshape').onChange(reshapeUpdated);
 
             this.gui = gui;
+
+            // disable some controllers
+            this._disableController('speed');
         },
 
         _update: function() {
