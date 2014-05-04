@@ -48,7 +48,7 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
 
             var particles = new THREE.Geometry(),
                 material = new THREE.ParticleBasicMaterial({
-                    size: 20,
+                    size: 80,
                     map: THREE.ImageUtils.loadTexture(
                         "img/particle.png"
                     ),
@@ -115,7 +115,7 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 }
                 
                 if (showActiveCells && _.fastContains(activeCells, i, activeCellsCache)) {
-                    color = 0x006400;
+                    color = 0x73c12d;
                 }
 
                 particles.colors[i].setHex(color);
@@ -144,8 +144,8 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                         permanence = synapse[2],
                         toParticle = particles[toIndex],
                         fromParticle = inputParticles[fromIndex],
-                        toColor = new THREE.Color(0x0000FF).multiplyScalar(permanence),
-                        fromColor = new THREE.Color(0xFF0000).multiplyScalar(permanence);
+                        toColor = new THREE.Color(0x666666).multiplyScalar(permanence),
+                        fromColor = new THREE.Color(0x528a20).multiplyScalar(permanence);
 
                     geometry.vertices.push(toParticle);
                     geometry.vertices.push(fromParticle);
