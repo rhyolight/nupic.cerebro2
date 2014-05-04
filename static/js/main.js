@@ -15,17 +15,24 @@ var params = {
     },
     loadLayersTimeoutDuration = intParam('loadLayersTimeoutDuration') || 0,
     modelURL = strParam('modelURL') || defaultModelURL(),
-    visualizationClass = (strParam('visualizationClass') == "TwoDVisualization") ? TwoDVisualization : ThreeDVisualization,
     layerClass = (strParam('layerClass') == "TestNetworkLayer") ? TestNetworkLayer : TestLocalLayer,
     model = strParam('modelClass') == "TestModel" ? new TestModel(layerClass, params) : new NetworkReadonlyModel(modelURL);
 
-var container = $('#container');
+var container3D = $('#container-3D'),
+    container2D = $('#container-2D');
 
 var history = new History();
-var visualization = new visualizationClass(container, history);
+    visualization3D = new ThreeDVisualization(container3D, history),
+    visualization2D = new TwoDVisualization(container2D, history);
 
-visualization.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
-visualization.render();
+visualization3D.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
+visualization3D.render();
+
+visualization2D.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
+visualization2D.render();
+
+var sync = new GUISync(visualization3D);
+sync.addChild(visualization2D);
 
 runModel();
 
@@ -37,7 +44,8 @@ function runModel() {
 
         if (snapshot) {
             history.addSnapshot(snapshot);
-            visualization.historyUpdated();
+            visualization3D.historyUpdated();
+            visualization2D.historyUpdated();
 
             delay = 0;
         }

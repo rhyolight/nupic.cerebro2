@@ -42,6 +42,9 @@ var AbstractVisualization = Fiber.extend(function() {
         getOutputDrawing: function() {return null;},
         initCamera: function(width, height) {return null;},
 
+        // Events
+        iterationChanged: function() {},
+
         /* Public */
 
         render: function() {
@@ -228,6 +231,7 @@ var AbstractVisualization = Fiber.extend(function() {
         _update: function() {
             if (this.lastIteration != this.iteration) {
                 this._iterationUpdated();
+                this.iterationChanged(); // fire event
                 this.lastIteration = this.iteration;
             }
         },
