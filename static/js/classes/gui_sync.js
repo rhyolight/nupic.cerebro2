@@ -10,7 +10,7 @@ var GUISync = Fiber.extend(function() {
 
         addChild: function(child) {
             this.children.push(child);
-            this._disableControllers(child);
+            this._hideControllers(child);
         },
 
         /* Private */
@@ -27,12 +27,12 @@ var GUISync = Fiber.extend(function() {
             this.master.iterationChanged = newFn;
         },
 
-        _disableControllers: function(child) {
-            child._disableController('iteration');
-            child._disableController('play');
-            child._disableController('speed');
-            child._disableController('next');
-            child._disableController('prev');
+        _hideControllers: function(child) {
+            child._hideController('iteration');
+            child._hideController('play');
+            child._hideController('speed');
+            child._hideController('next');
+            child._hideController('prev');
         },
 
         _iterationChanged: function() {

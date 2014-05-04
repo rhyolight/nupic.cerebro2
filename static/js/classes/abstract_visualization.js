@@ -112,25 +112,38 @@ var AbstractVisualization = Fiber.extend(function() {
             return this.maxSpeed - this.speed;
         },
 
-        _disableController: function(controllerName) {
-            // find the controller based on the name:
+        _findController: function(controllerName) {
             for (var i = 0; i < this.gui.__controllers.length; i++) {
-                if (this.gui.__controllers[i].property === controllerName) {
-                    if($(this.gui.__controllers[i].__li).children(".disabled").length > 0) {
-                        return;
-                    }
-                    $(this.gui.__controllers[i].__li).append("<div class='disabled'></div>");
+                var controller = this.gui.__controllers[i];
+
+                if (controller.property === controllerName) {
+                    return controller;
                 }
             }
+
+            return null;
+        },
+
+        _disableController: function(controllerName) {
+            var controller = this._findController(controllerName);
+            if (!controller) return;
+
+            if($(controller.__li).children(".disabled").length > 0) return;
+            $(controller.__li).append("<div class='disabled'></div>");
         },
 
         _enableController: function(controllerName) {
-            // find the controller based on the name:
-            for (var i = 0; i < this.gui.__controllers.length; i++) {
-                if (this.gui.__controllers[i].property === controllerName) {
-                    $(this.gui.__controllers[i].__li).children().remove(".disabled");
-                }
-            }
+            var controller = this._findController(controllerName);
+            if (!controller) return;
+
+            $(controller.__li).children().remove(".disabled");
+        },
+
+        _hideController: function(controllerName) {
+            var controller = this._findController(controllerName);
+            if (!controller) return;
+
+            $(controller.__li).addClass("hidden");
         },
 
         _initDrawings: function() {
