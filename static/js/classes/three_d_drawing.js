@@ -98,19 +98,23 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 showActiveCells = this.showActiveCells,
                 showPredictedCells = this.showPredictedCells;
 
+            var activeColumnsCache = {},
+                activeCellsCache = {},
+                predictedCellsCache = {};
+
             for (var i = 0; i < particles.vertices.length; i++) {
                 var column = Math.floor(i / numZ),
                     color = 0x222222;
 
-                if (showActiveColumns && _.contains(activeColumns, column)) {
+                if (showActiveColumns && _.fastContains(activeColumns, column, activeColumnsCache)) {
                     color = 0xFFFFFF;
                 }
 
-                if (showPredictedCells && _.contains(predictedCells, i)) {
+                if (showPredictedCells && _.fastContains(predictedCells, i, predictedCellsCache)) {
                     color = 0xAA0000;
                 }
                 
-                if (showActiveCells && _.contains(activeCells, i)) {
+                if (showActiveCells && _.fastContains(activeCells, i, activeCellsCache)) {
                     color = 0x006400;
                 }
 

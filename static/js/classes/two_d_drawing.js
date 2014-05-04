@@ -94,20 +94,24 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
                 showActiveCells = this.showActiveCells,
                 showPredictedCells = this.showPredictedCells;
 
+            var activeColumnsCache = {},
+                activeCellsCache = {},
+                predictedCellsCache = {};
+
             for (var i = 0; i < particles.vertices.length; i++) {
                 var color = 0x222222;
 
-                if (showActiveColumns && _.contains(activeColumns, i)) {
+                if (showActiveColumns && _.fastContains(activeColumns, i, activeColumnsCache)) {
                     color = 0xFFFFFF;
                 }
 
                 for (var j = 0; j < numZ; j++) {
                     var cell = i * numZ + j;
 
-                    if (showActiveCells && _.contains(activeCells, cell)) {
+                    if (showActiveCells && _.fastContains(activeCells, cell, activeCellsCache)) {
                         color = 0x006400;
                     }
-                    else if (showPredictedCells && _.contains(predictedCells, cell)) {
+                    else if (showPredictedCells && _.fastContains(predictedCells, cell, predictedCellsCache)) {
                         color = 0xAA0000;
                     }
                 }
