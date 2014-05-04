@@ -16,7 +16,7 @@ var AbstractDrawing = Fiber.extend(function() {
 
         /* Public */
 
-        setLayerDimensions: function(layerDimensions) {
+        setLayerDimensions: function(layerDimensions, reshape) {
             this.layerDimensions = layerDimensions;
         },
 
@@ -50,6 +50,22 @@ var AbstractDrawing = Fiber.extend(function() {
             this.predictedCells = [];
             this.proximalSynapses = [];
             this.distalSynapses = [];
+        },
+
+        reshape3Dimensions: function(dimensions) {
+            var x = dimensions[0],
+                y = dimensions[1],
+                z = dimensions[2],
+                product = x * y,
+                newX = Math.round(Math.sqrt(product)),
+                newY;
+
+            while (product % newX > 0) {
+                newX--;
+            }
+            newY = product / newX;
+
+            return [newX, newY, z];
         },
 
         /* To override */

@@ -10,7 +10,7 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
             this.particleSystem = null;
         },
 
-        setLayerDimensions: function(layerDimensions) {
+        setLayerDimensions: function(layerDimensions, reshape) {
             if (layerDimensions.length > 3) {
                 throw new Error("TwoDVisualization only supports up to 3-dimensional layers");
             }
@@ -19,14 +19,18 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
                 layerDimensions.push(1);
             }
 
+            if (reshape) {
+                layerDimensions = this.reshape3Dimensions(layerDimensions);
+            }
+
             base.setLayerDimensions.call(this, layerDimensions);
         },
 
         /* Public */
 
         setup: function() {
-            var paddingX = 10,
-                paddingY = 10,
+            var paddingX = 5,
+                paddingY = 5,
                 dimensions = this.layerDimensions;
 
             if (dimensions.length != 3) {

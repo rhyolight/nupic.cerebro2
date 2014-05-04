@@ -16,6 +16,8 @@ var AbstractVisualization = Fiber.extend(function() {
             this.iteration = 0;
             this.lastIteration = this.iteration;
 
+            this.reshape = false;
+
             this.snapshot = null;
             this.loadLayersTimeout = null;
             this.loadLayersTimeoutDuration = 500; // default (in ms)
@@ -136,7 +138,8 @@ var AbstractVisualization = Fiber.extend(function() {
             var outputDrawing = this.outputDrawing,
                 updateCells = _.bind(outputDrawing.updateCells, outputDrawing),
                 updateProximalSynapses = _.bind(outputDrawing.updateProximalSynapses, outputDrawing),
-                updateDistalSynapses = _.bind(outputDrawing.updateDistalSynapses, outputDrawing);
+                updateDistalSynapses = _.bind(outputDrawing.updateDistalSynapses, outputDrawing),
+                reshapeUpdated = _.bind(this._reshapeUpdated , this);
 
             var viewFolder = gui.addFolder('View');
             viewFolder.add(this.outputDrawing, 'showActiveColumns').onChange(updateCells);
@@ -144,6 +147,8 @@ var AbstractVisualization = Fiber.extend(function() {
             viewFolder.add(this.outputDrawing, 'showPredictedCells').onChange(updateCells);
             viewFolder.add(this.outputDrawing, 'showProximalSynapses').onChange(updateProximalSynapses);
             viewFolder.add(this.outputDrawing, 'showDistalSynapses').onChange(updateDistalSynapses);
+
+            gui.add(this, 'reshape').onChange(reshapeUpdated);
 
             this.gui = gui;
         },
@@ -176,8 +181,8 @@ var AbstractVisualization = Fiber.extend(function() {
                 inputDrawing = this.inputDrawing,
                 outputDrawing = this.outputDrawing;
 
-            inputDrawing.setLayerDimensions(inputDimensions);
-            outputDrawing.setLayerDimensions(outputDimensions);
+            inputDrawing.setLayerDimensions(inputDimensions, this.reshape);
+            outputDrawing.setLayerDimensions(outputDimensions, this.reshape);
 
             if (lastSnapshot) {
                 var lastInputDimensions = lastSnapshot.getInputLayer().getDimensions(),
@@ -198,6 +203,25 @@ var AbstractVisualization = Fiber.extend(function() {
                 outputDrawing.clear();
                 outputDrawing.setup();
             }
+        },
+
+        _reshapeUpdated: function() {
+            var inputDrawing = this.inputDrawing,
+                outputDrawing = this.outputDrawing,
+                snapshot = this.snapshot,
+                inputDimensions = snapshot.getInputLayer().getDimensions(),
+                outputDimensions = snapshot.getOutputLayer().getDimensions();
+
+            this._loadLayers();
+            
+            inputDrawing.setLayerDimensions(inputDimensions, this.reshape);
+            outputDrawing.setLayerDimensions(outputDimensions, this.reshape);
+
+            inputDrawing.clear();
+            inputDrawing.setup();
+
+            outputDrawing.clear();
+            outputDrawing.setup();
         },
 
         _loadLayers: function() {
