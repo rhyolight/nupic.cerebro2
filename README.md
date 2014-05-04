@@ -1,25 +1,28 @@
 # Cerebro 2
 
-A visualization and debugging tool for NuPIC.
+A visualization and platform for NuPIC.
 
 ## Usage
+
+Set up [cerebro2.server](https://github.com/chetan51/nupic.cerebro2.server) to export your model state.
+
+Then, run:
 
     cd static
     python -m SimpleHTTPServer 8000
 
-You can the visit the following URLs in your browser:
+You can then visit the following URLs in your browser:
 
-    // Basic demo
+    // 3D Visualization
     http://localhost:8000
+
+    // 2D Visualization
+    http://localhost:8000/#visualizationClass=TwoDVisualization
+
+## Testing
 
     // Random models demo
     http://localhost:8000/#modelClass=TestModel&minX=1&maxX=50&minY=1&maxY=25&minZ=3&maxZ=5
 
     // Network demo
     http://localhost:8000/#modelClass=TestModel&layerClass=TestNetworkLayer&loadLayersTimeoutDuration=500
-
-## Todo
-
-* Fix bug with manually typing in iteration number in the control box
-* Keep updating the number of iterations for network readonly models
-* Show the active synapses in a different color
