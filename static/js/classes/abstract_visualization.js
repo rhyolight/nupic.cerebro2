@@ -17,6 +17,7 @@ var AbstractVisualization = Fiber.extend(function() {
             this.lastIteration = this.iteration;
 
             this.timer = null;
+            this.playing = false;
 
             this.speed = 500;
             this.maxSpeed = 1000;
@@ -74,16 +75,19 @@ var AbstractVisualization = Fiber.extend(function() {
         },
 
         play: function() {
-            this.timer = _.delay(function(_this){
-                _this.iteration++;
-                if(_this.iteration < _this.guiIteration.__max) {
-                    _this.play();
-                } else {
-                    _this.pause();
+            if (!this.playing) {
+                this._enableController('speed');
+                this._enableController('pause');
+                this._player();
+            } else {
+                this.pause();
+            }
+            for (var i = 0; i < this.gui.__controllers.length; i++) {
+                if (this.gui.__controllers[i].property === "play") {
+                    this.gui.__controllers[i].name( (this.playing) ? "play" : "pause");
                 }
-                _this._enableController('speed');
-                _this._enableController('pause');
-            }, this._calculateSpeed(),this);
+            }
+            this.playing = !this.playing;
         },
 
         pause: function() {
@@ -93,6 +97,17 @@ var AbstractVisualization = Fiber.extend(function() {
         },
 
         /* Private */
+
+        _player: function() {
+            this.timer = _.delay(function(_this){
+                _this.iteration++;
+                if(_this.iteration < _this.guiIteration.__max) {
+                    _this._player();
+                } else {
+                    _this.pause();
+                }
+            }, this._calculateSpeed(),this);
+        },
 
         _calculateSpeed: function() {
             return this.maxSpeed - this.speed;
@@ -191,7 +206,6 @@ var AbstractVisualization = Fiber.extend(function() {
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
             gui.add(this, 'play');
             gui.add(this, 'speed',0,this.maxSpeed).step(1);
-            gui.add(this, 'pause');
             gui.add(this, 'next');
             gui.add(this, 'prev');
 
