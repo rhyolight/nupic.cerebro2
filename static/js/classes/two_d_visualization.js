@@ -1,5 +1,11 @@
 var TwoDVisualization = AbstractVisualization.extend(function(base) {
     return {
+        initRenderer: function() {
+            var renderer = base.initRenderer.call(this);
+            renderer.setClearColor(COLOR_LIGHT_BACKGROUND);
+            return renderer;
+        },
+
         initCamera: function(width, height) {
             var viewAngle = 45,
                 aspect = width / height,

@@ -46,6 +46,9 @@ var AbstractVisualization = Fiber.extend(function() {
         iterationChanged: function() {},
 
         /* Public */
+        initRenderer: function() {
+            return new THREE.WebGLRenderer();
+        },
 
         render: function() {
             if (this.stats) this.stats.begin();
@@ -151,8 +154,8 @@ var AbstractVisualization = Fiber.extend(function() {
                 width = container.width(),
                 height = container.height();
 
-            var renderer = new THREE.WebGLRenderer();
             var scene = new THREE.Scene();
+            var renderer = this.initRenderer();
 
             var camera = this.initCamera(width, height);
             scene.add(camera);

@@ -69,7 +69,7 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                             particle = new THREE.Vector3(pX, pY, pZ);
 
                         particles.vertices.push(particle);
-                        particles.colors.push(new THREE.Color(0xAAAAAA));
+                        particles.colors.push(new THREE.Color(COLOR_DARK_INACTIVE_CELL));
                     }
                 }
             }
@@ -104,18 +104,18 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
 
             for (var i = 0; i < particles.vertices.length; i++) {
                 var column = Math.floor(i / numZ),
-                    color = 0x222222;
+                    color = COLOR_DARK_INACTIVE_CELL;
 
                 if (showActiveColumns && _.fastContains(activeColumns, column, activeColumnsCache)) {
-                    color = 0xFFFFFF;
+                    color = COLOR_DARK_ACTIVE_COLUMN;
                 }
 
                 if (showPredictedCells && _.fastContains(predictedCells, i, predictedCellsCache)) {
-                    color = 0xAA0000;
+                    color = COLOR_DARK_PREDICTED_CELL;
                 }
                 
                 if (showActiveCells && _.fastContains(activeCells, i, activeCellsCache)) {
-                    color = 0x73c12d;
+                    color = COLOR_DARK_ACTIVE_CELL;
                 }
 
                 particles.colors[i].setHex(color);

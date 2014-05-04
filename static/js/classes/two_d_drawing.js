@@ -66,7 +66,7 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
                         particle = new THREE.Vector3(pX, pY, pZ);
 
                     particles.vertices.push(particle);
-                    particles.colors.push(new THREE.Color(0xAAAAAA));
+                    particles.colors.push(new THREE.Color(COLOR_LIGHT_INACTIVE_CELL));
                 }
             }
 
@@ -99,20 +99,20 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
                 predictedCellsCache = {};
 
             for (var i = 0; i < particles.vertices.length; i++) {
-                var color = 0x222222;
+                var color = COLOR_LIGHT_INACTIVE_CELL;
 
                 if (showActiveColumns && _.fastContains(activeColumns, i, activeColumnsCache)) {
-                    color = 0xFFFFFF;
+                    color = COLOR_LIGHT_ACTIVE_COLUMN;
                 }
 
                 for (var j = 0; j < numZ; j++) {
                     var cell = i * numZ + j;
 
                     if (showActiveCells && _.fastContains(activeCells, cell, activeCellsCache)) {
-                        color = 0x006400;
+                        color = COLOR_LIGHT_ACTIVE_CELL;
                     }
                     else if (showPredictedCells && _.fastContains(predictedCells, cell, predictedCellsCache)) {
-                        color = 0xAA0000;
+                        color = COLOR_LIGHT_PREDICTED_CELL;
                     }
                 }
 
