@@ -57,13 +57,13 @@ var AbstractDrawing = Fiber.extend(function() {
                 y = dimensions[1],
                 z = dimensions[2],
                 product = x * y,
-                newX = Math.round(Math.sqrt(product)),
-                newY;
+                newX,
+                newY = Math.round(Math.sqrt(product));
 
-            while (product % newX > 0) {
-                newX--;
+            while (product % newY > 0) {
+                newY--;
             }
-            newY = product / newX;
+            newX = product / newY;
 
             return [newX, newY, z];
         },

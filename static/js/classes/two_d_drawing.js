@@ -29,8 +29,8 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
         /* Public */
 
         setup: function() {
-            var paddingX = 5,
-                paddingY = 5,
+            var paddingX = 15,
+                paddingY = 15,
                 dimensions = this.layerDimensions;
 
             if (dimensions.length != 3) {
@@ -46,7 +46,7 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
 
             var particles = new THREE.Geometry(),
                 material = new THREE.ParticleBasicMaterial({
-                    size: 10,
+                    size: 30,
                     map: THREE.ImageUtils.loadTexture(
                         "img/particle.png"
                     ),
