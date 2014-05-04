@@ -95,20 +95,22 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 showPredictedCells = this.showPredictedCells;
 
             for (var i = 0; i < particles.vertices.length; i++) {
-                var column = Math.floor(i / numZ);
+                var column = Math.floor(i / numZ),
+                    color = 0x222222;
 
+                if (showActiveColumns && _.contains(activeColumns, column)) {
+                    color = 0xFFFFFF;
+                }
+
+                if (showPredictedCells && _.contains(predictedCells, i)) {
+                    color = 0xAA0000;
+                }
+                
                 if (showActiveCells && _.contains(activeCells, i)) {
-                    particles.colors[i].setHex(0x006400);
+                    color = 0x006400;
                 }
-                else if (showPredictedCells && _.contains(predictedCells, i)) {
-                    particles.colors[i].setHex(0xAA0000);
-                }
-                else if (showActiveColumns && _.contains(activeColumns, column)) {
-                    particles.colors[i].setHex(0xFFFFFF);
-                }
-                else {
-                    particles.colors[i].setHex(0x222222);
-                }
+
+                particles.colors[i].setHex(color);
             }
         },
 
