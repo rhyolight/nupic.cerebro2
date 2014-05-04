@@ -3,6 +3,8 @@ var NetworkMixin = function(base) {
         getJSON: function(path, callback) {
             $.getJSON(this.modelURL + "/" + path + "?callback=?", function(data) {
                 callback(null, data);
+            }).fail(function() {
+                callback(null, null);
             });
         }
     };
