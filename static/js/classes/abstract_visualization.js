@@ -32,6 +32,7 @@ var AbstractVisualization = Fiber.extend(function() {
 
         getInputDrawing: function() {return null;},
         getOutputDrawing: function() {return null;},
+        initCamera: function(width, height) {return null;},
 
         /* Public */
 
@@ -67,18 +68,12 @@ var AbstractVisualization = Fiber.extend(function() {
         _initDrawings: function() {
             var container = this.container,
                 width = container.width(),
-                height = container.height(),
-                viewAngle = 45,
-                aspect = width / height,
-                near = 0.1,
-                far = 10000;
+                height = container.height();
 
             var renderer = new THREE.WebGLRenderer();
-            var camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
             var scene = new THREE.Scene();
 
-            camera.position.y = 4000;
-            camera.up.set(0, 0, 1);
+            var camera = this.initCamera(width, height);
             scene.add(camera);
 
             renderer.setSize(width, height);

@@ -15,13 +15,14 @@ var params = {
     },
     loadLayersTimeoutDuration = intParam('loadLayersTimeoutDuration') || 0,
     modelURL = strParam('modelURL') || defaultModelURL(),
+    visualizationClass = (strParam('visualizationClass') == "TwoDVisualization") ? TwoDVisualization : ThreeDVisualization,
     layerClass = (strParam('layerClass') == "TestNetworkLayer") ? TestNetworkLayer : TestLocalLayer,
     model = strParam('modelClass') == "TestModel" ? new TestModel(layerClass, params) : new NetworkReadonlyModel(modelURL);
 
 var container = $('#container');
 
 var history = new History();
-var visualization = new ThreeDVisualization(container, history);
+var visualization = new visualizationClass(container, history);
 
 visualization.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
 visualization.render();
