@@ -1,7 +1,7 @@
 var Utils = {};
 
 /* From https://gist.github.com/ekeneijeoma/1186920 */
-Utils.createLabel = function(text, x, y, z, size, color, backgroundColor, backgroundMargin) {
+Utils.createLabel = function(text, size, color, backgroundColor, backgroundMargin) {
     if(!backgroundMargin)
         backgroundMargin = 50;
 
@@ -36,9 +36,6 @@ Utils.createLabel = function(text, x, y, z, size, color, backgroundColor, backgr
 
     var mesh = new THREE.Mesh(new THREE.PlaneGeometry(canvas.width, canvas.height), material);
     mesh.doubleSided = true;
-    mesh.position.x = x;
-    mesh.position.y = y;
-    mesh.position.z = z;
 
     return mesh;
 }
