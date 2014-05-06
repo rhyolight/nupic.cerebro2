@@ -241,6 +241,7 @@ var AbstractVisualization = Fiber.extend(function() {
             gui.add(this, 'speed', 0, this.maxSpeed).step(1);
             gui.add(this, 'next');
             gui.add(this, 'prev');
+            gui.add(this, 'reshape').onChange(reshapeUpdated);
 
             var outputDrawing = this.outputDrawing,
                 updateCells = _.bind(outputDrawing.updateCells, outputDrawing),
@@ -254,7 +255,6 @@ var AbstractVisualization = Fiber.extend(function() {
             viewFolder.add(this.outputDrawing, 'showPredictedCells').onChange(updateCells);
             viewFolder.add(this.outputDrawing, 'showProximalSynapses').onChange(updateProximalSynapses);
             viewFolder.add(this.outputDrawing, 'showDistalSynapses').onChange(updateDistalSynapses);
-            viewFolder.add(this, 'reshape').onChange(reshapeUpdated);
 
             this.gui = gui;
 
