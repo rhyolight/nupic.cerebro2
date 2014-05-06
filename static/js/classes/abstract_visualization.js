@@ -174,6 +174,24 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this.inputDrawing = inputDrawing;
             this.outputDrawing = outputDrawing;
+
+            this._watchForResize();
+        },
+
+        _watchForResize: function() {
+            var renderer = this.renderer,
+                camera = this.camera,
+                container = this.container;
+
+            $(window).resize(function() {
+                var width = container.width(),
+                    height = container.height();
+
+                renderer.setSize(width, height);
+                
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+            });
         },
 
         _initControls: function() {
