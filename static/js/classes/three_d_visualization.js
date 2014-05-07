@@ -13,12 +13,25 @@ var ThreeDVisualization = AbstractVisualization.extend(function(base) {
             return camera;
         },
 
-        getInputDrawing: function(scene) {
-            return new ThreeDDrawing(scene, 0, 0, -500);
+        getInputDrawing: function() {
+            return new ThreeDDrawing();
         },
 
-        getOutputDrawing: function(scene) {
-            return new ThreeDDrawing(scene, 0, 0, 0);
+        getOutputDrawing: function() {
+            return new ThreeDDrawing();
+        },
+
+        positionDrawings: function(inputDrawing, outputDrawing) {
+            var padding = 100;
+
+            var inputObject3D = inputDrawing.getObject3D(),
+                outputObject3D = outputDrawing.getObject3D();
+                inputSize = inputDrawing.getSize(),
+                outputSize = outputDrawing.getSize(),
+                total = Math.max(inputSize.z + outputSize.z, 100);
+
+            inputObject3D.position.z = -(total / 4 + padding);
+            outputObject3D.position.z = (total / 4 + padding);
         }
     };
 });

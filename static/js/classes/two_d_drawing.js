@@ -1,11 +1,7 @@
 var TwoDDrawing = AbstractDrawing.extend(function(base) {
     return {
-        init: function(scene, originX, originY) {
-            base.init.call(this, scene);
-
-            this.originX = originX;
-            this.originY = originY;
-            this.originZ = 0;
+        init: function() {
+            base.init.call(this);
 
             this.particleSystem = null;
         },
@@ -40,9 +36,9 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
             var numX = dimensions[0],
                 numY = dimensions[1],
                 numZ = dimensions[2],
-                originX = this.originX + (-(numX * paddingX) / 2),
-                originY = this.originY + (-(numY * paddingY) / 2),
-                originZ = this.originZ;
+                originX = -(numX * paddingX) / 2,
+                originY = -(numY * paddingY) / 2,
+                originZ = 0;
 
             var particles = new THREE.Geometry(),
                 material = new THREE.ParticleBasicMaterial({
@@ -70,15 +66,28 @@ var TwoDDrawing = AbstractDrawing.extend(function(base) {
                 }
             }
 
-            this.scene.add(particleSystem);
+            this.object3D.add(particleSystem);
 
             this.particleSystem = particleSystem;
+        },
+
+        getSize: function() {
+            var particleSystem = this.particleSystem,
+                geometry = particleSystem.geometry;
+
+            geometry.computeBoundingBox();
+
+            var min = geometry.boundingBox.min,
+                max = geometry.boundingBox.max,
+                size = new THREE.Vector3().subVectors(max, min);
+
+            return size;
         },
 
         clear: function() {
             if (!this.particleSystem) return;
 
-            this.scene.remove(this.particleSystem);
+            this.object3D.remove(this.particleSystem);
         },
 
         updateCells: function() {

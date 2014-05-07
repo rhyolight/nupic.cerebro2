@@ -1,8 +1,7 @@
 var AbstractDrawing = Fiber.extend(function() {
     return {
-        init: function(scene) {
-            this.scene = scene;
-
+        init: function() {
+            this.object3D = new THREE.Object3D();
             this.layerDimensions = null;
             this.inputDrawing = null;
             this.reset();
@@ -15,6 +14,10 @@ var AbstractDrawing = Fiber.extend(function() {
         },
 
         /* Public */
+
+        getObject3D: function() {
+            return this.object3D;
+        },
 
         setLayerDimensions: function(layerDimensions, reshape) {
             this.layerDimensions = layerDimensions;
@@ -71,6 +74,13 @@ var AbstractDrawing = Fiber.extend(function() {
         /* To override */
 
         setup: function() {},
+
+        getSize: function() {
+            /* Return:
+                   THREE.Vector3 containing size of drawing
+            */
+            return null;
+        },
 
         clear: function() {},
 

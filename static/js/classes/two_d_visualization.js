@@ -18,12 +18,25 @@ var TwoDVisualization = AbstractVisualization.extend(function(base) {
             return camera;
         },
 
-        getInputDrawing: function(scene) {
-            return new TwoDDrawing(scene, 0, -200);
+        getInputDrawing: function() {
+            return new TwoDDrawing();
         },
 
-        getOutputDrawing: function(scene) {
-            return new TwoDDrawing(scene, 0, 200);
+        getOutputDrawing: function() {
+            return new TwoDDrawing();
+        },
+
+        positionDrawings: function(inputDrawing, outputDrawing) {
+            var padding = 100;
+
+            var inputObject3D = inputDrawing.getObject3D(),
+                outputObject3D = outputDrawing.getObject3D();
+                inputSize = inputDrawing.getSize(),
+                outputSize = outputDrawing.getSize(),
+                total = Math.max(inputSize.y + outputSize.y, 100);
+
+            inputObject3D.position.y = -(total / 4 + padding);
+            outputObject3D.position.y = (total / 4 + padding);
         }
     };
 });

@@ -41,6 +41,7 @@ var AbstractVisualization = Fiber.extend(function() {
         getInputDrawing: function() {return null;},
         getOutputDrawing: function() {return null;},
         initCamera: function(width, height) {return null;},
+        positionDrawings: function(inputDrawing, outputDrawing) {},
 
         // Events
         iterationChanged: function() {},
@@ -167,8 +168,8 @@ var AbstractVisualization = Fiber.extend(function() {
             this.camera = camera;
             this.scene = scene;
 
-            var inputDrawing = this.getInputDrawing(scene),
-                outputDrawing = this.getOutputDrawing(scene);
+            var inputDrawing = this.getInputDrawing(),
+                outputDrawing = this.getOutputDrawing();
 
             outputDrawing.setInputDrawing(inputDrawing);
 
@@ -315,13 +316,8 @@ var AbstractVisualization = Fiber.extend(function() {
                     outputDimensionsChanged = false;
             }
 
-            if (inputDimensionsChanged) {
-                inputDrawing.clear();
-                inputDrawing.setup();
-            }
-            if (outputDimensionsChanged) {
-                outputDrawing.clear();
-                outputDrawing.setup();
+            if (inputDimensionsChanged || outputDimensionsChanged) {
+                this._redraw();
             }
         },
 
@@ -337,11 +333,24 @@ var AbstractVisualization = Fiber.extend(function() {
             inputDrawing.setLayerDimensions(inputDimensions, this.reshape);
             outputDrawing.setLayerDimensions(outputDimensions, this.reshape);
 
+            this._redraw();
+        },
+
+        _redraw: function() {
+            var inputDrawing = this.inputDrawing,
+                outputDrawing = this.outputDrawing,
+                scene = this.scene;
+
             inputDrawing.clear();
             inputDrawing.setup();
 
             outputDrawing.clear();
             outputDrawing.setup();
+
+            this.positionDrawings(inputDrawing, outputDrawing);
+
+            scene.add(outputDrawing.getObject3D());
+            scene.add(inputDrawing.getObject3D());
         },
 
         _loadLayers: function() {

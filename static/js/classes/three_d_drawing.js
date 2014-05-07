@@ -1,11 +1,7 @@
 var ThreeDDrawing = AbstractDrawing.extend(function(base) {
     return {
-        init: function(scene, originX, originY, originZ) {
-            base.init.call(this, scene);
-
-            this.originX = originX;
-            this.originY = originY;
-            this.originZ = originZ;
+        init: function() {
+            base.init.call(this);
 
             this.particleSystem = null;
             this.proximalLines = null;
@@ -42,9 +38,9 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
             var numX = dimensions[0],
                 numY = dimensions[1],
                 numZ = dimensions[2],
-                originX = this.originX + (-(numX * paddingX) / 2),
-                originY = this.originY + (-(numY * paddingY) / 2),
-                originZ = this.originZ + (-(numZ * paddingZ) / 2);
+                originX = -(numX * paddingX) / 2,
+                originY = -(numY * paddingY) / 2,
+                originZ = -(numZ * paddingZ) / 2;
 
             var particles = new THREE.Geometry(),
                 material = new THREE.ParticleBasicMaterial({
@@ -74,15 +70,28 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 }
             }
 
-            this.scene.add(particleSystem);
+            this.object3D.add(particleSystem);
 
             this.particleSystem = particleSystem;
+        },
+
+        getSize: function() {
+            var particleSystem = this.particleSystem,
+                geometry = particleSystem.geometry;
+
+            geometry.computeBoundingBox();
+
+            var min = geometry.boundingBox.min,
+                max = geometry.boundingBox.max,
+                size = new THREE.Vector3().subVectors(max, min);
+
+            return size;
         },
 
         clear: function() {
             if (!this.particleSystem) return;
 
-            this.scene.remove(this.particleSystem);
+            this.object3D.remove(this.particleSystem);
         },
 
         updateCells: function() {
@@ -131,10 +140,12 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                 proximalSynapses = this.proximalSynapses,
                 showProximalSynapses = this.showProximalSynapses;
 
-            if (this.proximalLines) this.scene.remove(this.proximalLines);
-                
+            if (this.proximalLines) this.object3D.remove(this.proximalLines);
+
             if (showProximalSynapses && inputDrawing) {
-                var geometry = new THREE.Geometry(),
+                var position = this.object3D.position,
+                    inputPosition = inputDrawing.object3D.position,
+                    geometry = new THREE.Geometry(),
                     material = new THREE.LineBasicMaterial({vertexColors: THREE.VertexColors});
 
                 for (var i = 0; i < proximalSynapses.length; i++) {
@@ -142,10 +153,14 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
                         toIndex = synapse[0],
                         fromIndex = synapse[1],
                         permanence = synapse[2],
-                        toParticle = particles[toIndex],
-                        fromParticle = inputParticles[fromIndex],
+                        toParticle = particles[toIndex].clone(),
+                        fromParticle = inputParticles[fromIndex].clone(),
                         toColor = new THREE.Color(0x666666).multiplyScalar(permanence),
                         fromColor = new THREE.Color(0x528a20).multiplyScalar(permanence);
+
+                    // Convert to absolute position
+                    fromParticle.sub(position);
+                    fromParticle.add(inputPosition);
 
                     geometry.vertices.push(toParticle);
                     geometry.vertices.push(fromParticle);
@@ -156,7 +171,7 @@ var ThreeDDrawing = AbstractDrawing.extend(function(base) {
 
                 var line = new THREE.Line(geometry, material, THREE.LinePieces);
 
-                this.scene.add(line);
+                this.object3D.add(line);
 
                 this.proximalLines = line;
             }
