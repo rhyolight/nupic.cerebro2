@@ -235,7 +235,8 @@ var AbstractVisualization = Fiber.extend(function() {
 
         _initGUI: function() {
             var gui = new dat.GUI({ autoPlace: false }),
-                domElement = $(gui.domElement);
+                domElement = $(gui.domElement),
+                reshapeUpdated = _.bind(this._reshapeUpdated , this);
 
             domElement.addClass("controls");
             this.container.append(domElement);
@@ -253,8 +254,7 @@ var AbstractVisualization = Fiber.extend(function() {
             var outputDrawing = this.outputDrawing,
                 updateCells = _.bind(outputDrawing.updateCells, outputDrawing),
                 updateProximalSynapses = _.bind(outputDrawing.updateProximalSynapses, outputDrawing),
-                updateDistalSynapses = _.bind(outputDrawing.updateDistalSynapses, outputDrawing),
-                reshapeUpdated = _.bind(this._reshapeUpdated , this);
+                updateDistalSynapses = _.bind(outputDrawing.updateDistalSynapses, outputDrawing);
 
             var viewFolder = gui.addFolder('View');
             viewFolder.add(this.outputDrawing, 'showActiveColumns').onChange(updateCells);
