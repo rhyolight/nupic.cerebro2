@@ -278,7 +278,7 @@ var AbstractVisualization = Fiber.extend(function() {
 
         _prevIteration: function() {
             this.pause();
-            this.iteration = Math.max(this.iteration - 1, 0);
+            this.iteration = Math.max(this.iteration - 1, 1);
         },
 
         _iterationUpdated: function() {

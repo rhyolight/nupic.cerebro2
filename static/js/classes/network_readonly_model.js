@@ -44,7 +44,7 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
                 return;
             }
 
-            var iteration = this.numSnapshots,
+            var iteration = this.numSnapshots + 1,
                 modelURL = this.modelURL,
                 inputLayer = new NetworkLayer(inputDimensions,
                                               "input",
