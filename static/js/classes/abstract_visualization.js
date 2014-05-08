@@ -83,19 +83,17 @@ var AbstractVisualization = Fiber.extend(function() {
                 this._enableController('speed');
                 this._enableController('pause');
                 this._player();
+                this.playing = true;
+                this._changeControllerText("play", "pause");
             } else {
                 this.pause();
             }
-            for (var i = 0; i < this.gui.__controllers.length; i++) {
-                if (this.gui.__controllers[i].property === "play") {
-                    this.gui.__controllers[i].name( (this.playing) ? "play" : "pause");
-                }
-            }
-            this.playing = !this.playing;
         },
 
         pause: function() {
             clearTimeout(this.timer);
+            this.playing = false;
+            this._changeControllerText("play", "play");
             this._disableController('speed');
         },
 
@@ -110,6 +108,14 @@ var AbstractVisualization = Fiber.extend(function() {
                     _this.pause();
                 }
             }, this._calculateSpeed(),this);
+        },
+
+        _changeControllerText: function(name, label) {
+            for (var i = 0; i < this.gui.__controllers.length; i++) {
+                if (this.gui.__controllers[i].property === name) {
+                    this.gui.__controllers[i].name(label);
+                }
+            }
         },
 
         _calculateSpeed: function() {
