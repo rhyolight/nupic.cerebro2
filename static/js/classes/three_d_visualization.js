@@ -7,7 +7,7 @@ var ThreeDVisualization = AbstractVisualization.extend(function(base) {
                 far = 10000;
                 camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
 
-            camera.position.set(2000, 2000, 2000);
+            camera.position.set(2000, 2000, 500);
             camera.lookAt(0,0,0);
             camera.up.set(0, 0, 1);
 
