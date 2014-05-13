@@ -22,7 +22,7 @@ var AbstractVisualization = Fiber.extend(function() {
             this.speed = 500;
             this.maxSpeed = 1000;
 
-            this.reshape = false;
+            this.reshape = true;
 
             this.snapshot = null;
             this.loadLayersTimeout = null;
