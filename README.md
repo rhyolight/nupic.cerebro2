@@ -11,10 +11,6 @@ Then, run:
     cd static
     python -m SimpleHTTPServer 8000
 
-You can then visit the following URLs in your browser:
+Finally, visit the following URL in your browser:
 
-    // 3D Visualization
     http://localhost:8000
-
-    // 2D Visualization
-    http://localhost:8000/#visualizationClass=TwoDVisualization
