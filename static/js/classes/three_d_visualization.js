@@ -33,6 +33,32 @@ var ThreeDVisualization = AbstractVisualization.extend(function(base) {
 
             inputObject3D.position.z = -(total / 4 + padding);
             outputObject3D.position.z = (total / 4 + padding);
+        },
+
+        addGuiControls: function() {
+            this.next = this._nextIteration;
+            this.prev = this._prevIteration;
+
+            this.gui.add(this, 'play');
+            this.gui.add(this, 'speed', 0, this.maxSpeed).step(1);
+            this.gui.add(this, 'next');
+            this.gui.add(this, 'prev');
+            var reshapeUpdated = _.bind(this._reshapeUpdated , this);
+            this.gui.add(this, 'reshape').onChange(reshapeUpdated);
+            var outputDrawing = this.outputDrawing,
+                updateCells = _.bind(outputDrawing.updateCells, outputDrawing),
+                updateProximalSynapses = _.bind(outputDrawing.updateProximalSynapses, outputDrawing),
+                updateDistalSynapses = _.bind(outputDrawing.updateDistalSynapses, outputDrawing);
+
+            var viewFolder = this.gui.addFolder('View');
+            viewFolder.add(this.outputDrawing, 'showActiveColumns').onChange(updateCells);
+            viewFolder.add(this.outputDrawing, 'showActiveCells').onChange(updateCells);
+            viewFolder.add(this.outputDrawing, 'showPredictedCells').onChange(updateCells);
+            viewFolder.add(this.outputDrawing, 'showProximalSynapses').onChange(updateProximalSynapses);
+            viewFolder.add(this.outputDrawing, 'showDistalSynapses').onChange(updateDistalSynapses);
+
+            // disable some controllers
+            this._disableController('speed');
         }
     };
 });
