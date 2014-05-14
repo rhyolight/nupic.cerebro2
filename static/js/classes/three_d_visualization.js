@@ -36,13 +36,6 @@ var ThreeDVisualization = AbstractVisualization.extend(function(base) {
         },
 
         addGuiControls: function() {
-            this.next = this._nextIteration;
-            this.prev = this._prevIteration;
-
-            this.gui.add(this, 'play');
-            this.gui.add(this, 'speed', 0, this.maxSpeed).step(1);
-            this.gui.add(this, 'next');
-            this.gui.add(this, 'prev');
             var reshapeUpdated = _.bind(this._reshapeUpdated , this);
             this.gui.add(this, 'reshape').onChange(reshapeUpdated);
             var outputDrawing = this.outputDrawing,

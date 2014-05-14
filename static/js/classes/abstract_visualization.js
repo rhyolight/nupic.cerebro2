@@ -240,7 +240,16 @@ var AbstractVisualization = Fiber.extend(function() {
 
             domElement.addClass("controls");
             this.container.append(domElement);
+
+            this.next = this._nextIteration;
+            this.prev = this._prevIteration;
+
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
+            gui.add(this, 'play');
+            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
+            gui.add(this, 'next');
+            gui.add(this, 'prev');
+
             this.gui = gui;
             this.addGuiControls();
         },
