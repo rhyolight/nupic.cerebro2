@@ -42,7 +42,7 @@ var AbstractVisualization = Fiber.extend(function() {
         getOutputDrawing: function() {return null;},
         initCamera: function(width, height) {return null;},
         positionDrawings: function(inputDrawing, outputDrawing) {},
-        addGuiControls: function() {return null;},
+        addGuiControls: function() {},
 
         // Events
         iterationChanged: function() {},
