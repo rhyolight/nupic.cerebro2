@@ -42,6 +42,7 @@ var AbstractVisualization = Fiber.extend(function() {
         getOutputDrawing: function() {return null;},
         initCamera: function(width, height) {return null;},
         positionDrawings: function(inputDrawing, outputDrawing) {},
+        addGuiControls: function() {},
 
         // Events
         iterationChanged: function() {},
@@ -235,8 +236,7 @@ var AbstractVisualization = Fiber.extend(function() {
 
         _initGUI: function() {
             var gui = new dat.GUI({ autoPlace: false }),
-                domElement = $(gui.domElement),
-                reshapeUpdated = _.bind(this._reshapeUpdated , this);
+                domElement = $(gui.domElement);
 
             domElement.addClass("controls");
             this.container.append(domElement);
@@ -249,24 +249,9 @@ var AbstractVisualization = Fiber.extend(function() {
             gui.add(this, 'speed', 0, this.maxSpeed).step(1);
             gui.add(this, 'next');
             gui.add(this, 'prev');
-            gui.add(this, 'reshape').onChange(reshapeUpdated);
-
-            var outputDrawing = this.outputDrawing,
-                updateCells = _.bind(outputDrawing.updateCells, outputDrawing),
-                updateProximalSynapses = _.bind(outputDrawing.updateProximalSynapses, outputDrawing),
-                updateDistalSynapses = _.bind(outputDrawing.updateDistalSynapses, outputDrawing);
-
-            var viewFolder = gui.addFolder('View');
-            viewFolder.add(this.outputDrawing, 'showActiveColumns').onChange(updateCells);
-            viewFolder.add(this.outputDrawing, 'showActiveCells').onChange(updateCells);
-            viewFolder.add(this.outputDrawing, 'showPredictedCells').onChange(updateCells);
-            viewFolder.add(this.outputDrawing, 'showProximalSynapses').onChange(updateProximalSynapses);
-            viewFolder.add(this.outputDrawing, 'showDistalSynapses').onChange(updateDistalSynapses);
 
             this.gui = gui;
-
-            // disable some controllers
-            this._disableController('speed');
+            this.addGuiControls();
         },
 
         _update: function() {
