@@ -1,4 +1,4 @@
-var ThreeDVisualization = AbstractVisualization.extend(function(base) {
+var ThreeDCellVisualization = CellVisualization.extend(function(base) {
     return {
         initCamera: function(width, height) {
             var viewAngle = 45,
@@ -36,8 +36,8 @@ var ThreeDVisualization = AbstractVisualization.extend(function(base) {
         },
 
         addGuiControls: function() {
-            var reshapeUpdated = _.bind(this._reshapeUpdated , this);
-            this.gui.add(this, 'reshape').onChange(reshapeUpdated);
+            base.addGuiControls.call(this);
+
             var outputDrawing = this.outputDrawing,
                 updateCells = _.bind(outputDrawing.updateCells, outputDrawing),
                 updateProximalSynapses = _.bind(outputDrawing.updateProximalSynapses, outputDrawing),

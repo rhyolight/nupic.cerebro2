@@ -1,4 +1,4 @@
-var TwoDVisualization = AbstractVisualization.extend(function(base) {
+var TwoDCellVisualization = CellVisualization.extend(function(base) {
     return {
         initRenderer: function() {
             var renderer = base.initRenderer.call(this);
@@ -40,8 +40,8 @@ var TwoDVisualization = AbstractVisualization.extend(function(base) {
         },
 
         addGuiControls: function() {
-            var reshapeUpdated = _.bind(this._reshapeUpdated , this);
-            this.gui.add(this, 'reshape').onChange(reshapeUpdated);
+            base.addGuiControls.call(this);
+            
             var outputDrawing = this.outputDrawing,
                 updateCells = _.bind(outputDrawing.updateCells, outputDrawing);
 

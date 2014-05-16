@@ -8,8 +8,8 @@ var container3D = $('#container-3D'),
 
 var model = new NetworkReadonlyModel(modelURL),
     history = new History(),
-    visualization3D = new ThreeDVisualization(container3D, history),
-    visualization2D = new TwoDVisualization(container2D, history);
+    visualization3D = new ThreeDCellVisualization(container3D, history),
+    visualization2D = new TwoDCellVisualization(container2D, history);
 
 visualization3D.loadDelay = loadDelay;
 visualization3D.render();
