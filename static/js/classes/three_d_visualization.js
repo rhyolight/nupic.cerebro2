@@ -15,11 +15,11 @@ var ThreeDVisualization = AbstractVisualization.extend(function(base) {
         },
 
         getInputDrawing: function() {
-            return new ThreeDDrawing();
+            return new ThreeDCellDrawing();
         },
 
         getOutputDrawing: function() {
-            return new ThreeDDrawing();
+            return new ThreeDCellDrawing();
         },
 
         positionDrawings: function(inputDrawing, outputDrawing) {

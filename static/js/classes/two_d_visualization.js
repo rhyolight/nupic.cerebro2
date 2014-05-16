@@ -19,11 +19,11 @@ var TwoDVisualization = AbstractVisualization.extend(function(base) {
         },
 
         getInputDrawing: function() {
-            return new TwoDDrawing();
+            return new TwoDCellDrawing();
         },
 
         getOutputDrawing: function() {
-            return new TwoDDrawing();
+            return new TwoDCellDrawing();
         },
 
         positionDrawings: function(inputDrawing, outputDrawing) {

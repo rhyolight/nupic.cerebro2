@@ -1,4 +1,4 @@
-var TwoDDrawing = AbstractDrawing.extend(function(base) {
+var TwoDCellDrawing = CellDrawing.extend(function(base) {
     return {
         init: function() {
             base.init.call(this);

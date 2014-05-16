@@ -1,4 +1,4 @@
-var ThreeDDrawing = AbstractDrawing.extend(function(base) {
+var ThreeDCellDrawing = CellDrawing.extend(function(base) {
     return {
         init: function() {
             base.init.call(this);
