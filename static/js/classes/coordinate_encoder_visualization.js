@@ -9,22 +9,12 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
         },
 
         /* Public */
-        iterationChanged: function(currentSnapshot, lastSnapshot) {
-            var name = this.name,
-                snapshot = currentSnapshot,
-                region = snapshot.getEncoderRegion(name);
 
-            if (region) {
-                this.region = region;
-                this._load();
-            }
-        },
+        loadData: function() {
+            var region = this.getRegion();
+            if (!region) return;
 
-        /* Private */
-
-        _load: function() {
-            var region = this.region,
-                name = this.name;
+            var name = this.name;
 
             region.getNeighbors(function(error, neighbors) {
                 console.clear();
@@ -36,6 +26,6 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
                     console.log(JSON.stringify(topWCoordinates));
                 });
             });
-        }
+        },
     };
 });
