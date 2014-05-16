@@ -13,7 +13,7 @@ var EncoderVisualization = AbstractVisualization.extend(function(base) {
         initCamera: function(width, height) {
             var camera = base.initCamera.call(this, width, height);
 
-            camera.position.set(30, 50, 120);
+            camera.position.set(300, 500, 1200);
             camera.lookAt(new THREE.Vector3(0, 0, 0));
 
             return camera;
