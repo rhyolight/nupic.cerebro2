@@ -1,19 +1,31 @@
 var Snapshot = Fiber.extend(function() {
     return {
-        setInputCellRegion: function(inputCellRegion) {
-            this.inputCellRegion = inputCellRegion;
+        init: function() {
+            this.encoders = {};
         },
 
-        setOutputCellRegion: function(outputCellRegion) {
-            this.outputCellRegion = outputCellRegion;
+        setInputCellRegion: function(inputCellRegion) {
+            this.inputCellRegion = inputCellRegion;
         },
 
         getInputCellRegion: function() {
             return this.inputCellRegion;
         },
 
+        setOutputCellRegion: function(outputCellRegion) {
+            this.outputCellRegion = outputCellRegion;
+        },
+
         getOutputCellRegion: function() {
             return this.outputCellRegion;
+        },
+
+        addEncoderRegion: function(encoderRegion) {
+            this.encoders[encoderRegion.getName()] = encoderRegion;
+        },
+
+        getEncoderRegion: function(name) {
+            return this.encoders[name];
         }
     };
 });

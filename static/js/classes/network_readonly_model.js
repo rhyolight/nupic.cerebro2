@@ -6,11 +6,13 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
 
             this.inputDimensions = null;
             this.outputDimensions = null;
-            self.numIterations = 0;
+            this.encoders = null;
+            this.numIterations = 0;
             this.numSnapshots = 0;
 
             this.getNumIterations();
             this.getDimensions();
+            this.getEncoders();
         },
 
         getNumIterations: function() {
@@ -33,13 +35,26 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
             });
         },
 
+        getEncoders: function() {
+            var self = this;
+
+            self.getJSON("encoders", function(error, encoders) {
+                encoders = encoders || [];
+                self.encoders = encoders;
+            });
+        },
+
         /* Public */
 
         getNextSnapshot: function(callback) {
             var inputDimensions = this.inputDimensions,
-                outputDimensions = this.outputDimensions;
+                outputDimensions = this.outputDimensions,
+                encoders = this.encoders;
 
-            if (!inputDimensions || !outputDimensions || this.numSnapshots >= this.numIterations) {
+            if (!inputDimensions ||
+                !outputDimensions ||
+                !encoders ||
+                this.numSnapshots >= this.numIterations) {
                 callback(null, null);
                 return;
             }
@@ -59,6 +74,17 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
 
             snapshot.setInputCellRegion(inputCellRegion);
             snapshot.setOutputCellRegion(outputCellRegion);
+
+            for (i in encoders) {
+                var encoder = encoders[i],
+                    name = encoder.name,
+                    cls = encoder.cls,
+                    encoderRegion = new NetworkEncoderRegion(name,
+                                                             iteration,
+                                                             modelURL);
+
+                snapshot.addEncoderRegion(encoderRegion);
+            }
 
             this.numSnapshots += 1;
             callback(null, snapshot);
