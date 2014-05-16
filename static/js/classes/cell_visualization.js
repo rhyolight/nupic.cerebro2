@@ -18,8 +18,8 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
 
         /* Public */
 
-        addGuiControls: function() {
-            base.addGuiControls.call(this);
+        initGUI: function() {
+            base.initGUI.call(this);
 
             var reshapeUpdated = _.bind(this._reshapeUpdated , this);
             this.gui.add(this, 'reshape').onChange(reshapeUpdated);

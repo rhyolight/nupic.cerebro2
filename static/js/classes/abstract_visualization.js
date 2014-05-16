@@ -27,15 +27,15 @@ var AbstractVisualization = Fiber.extend(function() {
             this._initScene();
             this._initControls();
             this._initStats();
-            this._initGUI();
 
+            this.initGUI();
+            
             this.historyUpdated();
         },
 
         /* To Override */
 
         initCamera: function(width, height) {return null;},
-        addGuiControls: function() {},
 
         // Events
         iterationChanged: function(currentSnapshot, lastSnapshot) {},
@@ -44,6 +44,25 @@ var AbstractVisualization = Fiber.extend(function() {
 
         initRenderer: function() {
             return new THREE.WebGLRenderer();
+        },
+
+        initGUI: function() {
+            var gui = new dat.GUI({ autoPlace: false }),
+                domElement = $(gui.domElement);
+
+            domElement.addClass("controls");
+            this.container.append(domElement);
+
+            this.next = this._nextIteration;
+            this.prev = this._prevIteration;
+
+            this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
+            gui.add(this, 'play');
+            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
+            gui.add(this, 'next');
+            gui.add(this, 'prev');
+
+            this.gui = gui;
         },
 
         /* Public */
@@ -220,26 +239,6 @@ var AbstractVisualization = Fiber.extend(function() {
             this.container.append(domElement);
 
             this.stats = stats;
-        },
-
-        _initGUI: function() {
-            var gui = new dat.GUI({ autoPlace: false }),
-                domElement = $(gui.domElement);
-
-            domElement.addClass("controls");
-            this.container.append(domElement);
-
-            this.next = this._nextIteration;
-            this.prev = this._prevIteration;
-
-            this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
-            gui.add(this, 'play');
-            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
-            gui.add(this, 'next');
-            gui.add(this, 'prev');
-
-            this.gui = gui;
-            this.addGuiControls();
         },
 
         _update: function() {

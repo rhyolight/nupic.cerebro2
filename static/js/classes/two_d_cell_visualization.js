@@ -39,8 +39,8 @@ var TwoDCellVisualization = CellVisualization.extend(function(base) {
             outputObject3D.position.y = (total / 4 + padding);
         },
 
-        addGuiControls: function() {
-            base.addGuiControls.call(this);
+        initGUI: function() {
+            base.initGUI.call(this);
             
             var outputDrawing = this.outputDrawing,
                 updateCells = _.bind(outputDrawing.updateCells, outputDrawing);

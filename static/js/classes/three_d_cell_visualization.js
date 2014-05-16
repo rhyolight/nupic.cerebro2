@@ -35,8 +35,8 @@ var ThreeDCellVisualization = CellVisualization.extend(function(base) {
             outputObject3D.position.z = (total / 4 + padding);
         },
 
-        addGuiControls: function() {
-            base.addGuiControls.call(this);
+        initGUI: function() {
+            base.initGUI.call(this);
 
             var outputDrawing = this.outputDrawing,
                 updateCells = _.bind(outputDrawing.updateCells, outputDrawing),
