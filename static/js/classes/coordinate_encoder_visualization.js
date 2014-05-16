@@ -2,10 +2,10 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
     return {
         init: function(container, history, name) {
             this.name = name;
-
-            this.region = null;
-
             base.init.call(this, container, history, name);
+
+            this.coordinateDrawing = new CoordinateSystemDrawing();
+            this._redraw();
         },
 
         /* Public */
@@ -14,18 +14,31 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             var region = this.getRegion();
             if (!region) return;
 
-            var name = this.name;
+            var self = this,
+                name = this.name,
+                coordinateDrawing = this.coordinateDrawing;
 
             region.getNeighbors(function(error, neighbors) {
-                console.clear();
-                console.log("Encoder '" + name + "' neighbors:");
-                console.log(JSON.stringify(neighbors));
+                coordinateDrawing.setNeighbors(neighbors);
 
                 region.getTopWCoordinates(function(error, topWCoordinates) {
-                    console.log("Encoder '" + name + "' topWCoordinates:");
-                    console.log(JSON.stringify(topWCoordinates));
+                    coordinateDrawing.setTopWCoordinates(topWCoordinates);
+
+                    self._redraw();
                 });
             });
+        },
+
+        /* Private */
+
+        _redraw: function() {
+            var scene = this.scene,
+                coordinateDrawing = this.coordinateDrawing;
+
+            coordinateDrawing.clear();
+            coordinateDrawing.setup();
+
+            scene.add(coordinateDrawing.getObject3D());
         },
     };
 });

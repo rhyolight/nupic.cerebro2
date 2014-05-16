@@ -10,6 +10,15 @@ var EncoderVisualization = AbstractVisualization.extend(function(base) {
 
         /* Public */
 
+        initCamera: function(width, height) {
+            var camera = base.initCamera.call(this, width, height);
+
+            camera.position.set(30, 50, 120);
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+            return camera;
+        },
+
         getRegion: function() {
             var name = this.name,
                 snapshot = this.snapshot;
