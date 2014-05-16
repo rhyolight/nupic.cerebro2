@@ -1,7 +1,10 @@
 var Snapshot = Fiber.extend(function() {
     return {
-        init: function(inputCellRegion, outputCellRegion) {
+        setInputCellRegion: function(inputCellRegion) {
             this.inputCellRegion = inputCellRegion;
+        },
+
+        setOutputCellRegion: function(outputCellRegion) {
             this.outputCellRegion = outputCellRegion;
         },
 
