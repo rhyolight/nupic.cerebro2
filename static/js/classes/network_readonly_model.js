@@ -46,15 +46,15 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
 
             var iteration = this.numSnapshots + 1,
                 modelURL = this.modelURL,
-                inputLayer = new NetworkLayer(inputDimensions,
-                                              "input",
-                                              iteration,
-                                              modelURL),
-                outputLayer = new NetworkLayer(outputDimensions,
-                                              "output",
-                                              iteration,
-                                              modelURL),
-                snapshot = new Snapshot(inputLayer, outputLayer);
+                inputCellRegion = new NetworkCellRegion(inputDimensions,
+                                                        "input",
+                                                        iteration,
+                                                        modelURL),
+                outputCellRegion = new NetworkCellRegion(outputDimensions,
+                                                         "output",
+                                                         iteration,
+                                                         modelURL),
+                snapshot = new Snapshot(inputCellRegion, outputCellRegion);
 
             this.numSnapshots += 1;
             callback(null, snapshot);

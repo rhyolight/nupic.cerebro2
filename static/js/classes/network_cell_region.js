@@ -1,4 +1,4 @@
-var NetworkLayer = AbstractLayer.extend(function(base) {
+var NetworkCellRegion = CellRegion.extend(function(base) {
     return {
         init: function(dimensions, layer, iteration, modelURL) {
             base.init.call(this, dimensions);
@@ -56,4 +56,4 @@ var NetworkLayer = AbstractLayer.extend(function(base) {
     };
 });
 
-Fiber.mixin(NetworkLayer, NetworkMixin);
+Fiber.mixin(NetworkCellRegion, NetworkMixin);

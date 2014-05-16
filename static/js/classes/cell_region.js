@@ -1,4 +1,4 @@
-var AbstractLayer = Fiber.extend(function() {
+var CellRegion = AbstractRegion.extend(function() {
     return {
         init: function(dimensions) {
             this.dimensions = dimensions;
