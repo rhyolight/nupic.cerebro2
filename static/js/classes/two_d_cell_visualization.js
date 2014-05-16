@@ -7,15 +7,23 @@ var TwoDCellVisualization = CellVisualization.extend(function(base) {
         },
 
         initCamera: function(width, height) {
-            var viewAngle = 45,
-                aspect = width / height,
-                near = 0.1,
-                far = 10000;
-                camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
+            var camera = base.initCamera.call(this, width, height);
 
             camera.position.z = 1000;
             
             return camera;
+        },
+
+        initGUI: function() {
+            base.initGUI.call(this);
+            
+            var outputDrawing = this.outputDrawing,
+                updateCells = _.bind(outputDrawing.updateCells, outputDrawing);
+
+            var viewFolder = this.gui.addFolder('View');
+            viewFolder.add(this.outputDrawing, 'showActiveColumns').onChange(updateCells);
+            viewFolder.add(this.outputDrawing, 'showActiveCells').onChange(updateCells);
+            viewFolder.add(this.outputDrawing, 'showPredictedCells').onChange(updateCells);
         },
 
         getInputDrawing: function() {
@@ -38,17 +46,5 @@ var TwoDCellVisualization = CellVisualization.extend(function(base) {
             inputObject3D.position.y = -(total / 4 + padding);
             outputObject3D.position.y = (total / 4 + padding);
         },
-
-        initGUI: function() {
-            base.initGUI.call(this);
-            
-            var outputDrawing = this.outputDrawing,
-                updateCells = _.bind(outputDrawing.updateCells, outputDrawing);
-
-            var viewFolder = this.gui.addFolder('View');
-            viewFolder.add(this.outputDrawing, 'showActiveColumns').onChange(updateCells);
-            viewFolder.add(this.outputDrawing, 'showActiveCells').onChange(updateCells);
-            viewFolder.add(this.outputDrawing, 'showPredictedCells').onChange(updateCells);
-        }
     };
 });

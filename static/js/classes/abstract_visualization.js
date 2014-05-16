@@ -29,13 +29,11 @@ var AbstractVisualization = Fiber.extend(function() {
             this._initStats();
 
             this.initGUI();
-            
+
             this.historyUpdated();
         },
 
         /* To Override */
-
-        initCamera: function(width, height) {return null;},
 
         // Events
         iterationChanged: function(currentSnapshot, lastSnapshot) {},
@@ -44,6 +42,16 @@ var AbstractVisualization = Fiber.extend(function() {
 
         initRenderer: function() {
             return new THREE.WebGLRenderer();
+        },
+
+        initCamera: function(width, height) {
+            var viewAngle = 45,
+                aspect = width / height,
+                near = 0.1,
+                far = 10000;
+                camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
+
+            return camera;
         },
 
         initGUI: function() {
