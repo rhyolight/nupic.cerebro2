@@ -24,11 +24,11 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
         getDimensions: function() {
             var self = this;
 
-            self.getJSON("input/dimensions", function(error, inputDimensions) {
+            self.getJSON("dimensions/input", function(error, inputDimensions) {
                 self.inputDimensions = inputDimensions || [];
             });
 
-            self.getJSON("output/dimensions", function(error, outputDimensions) {
+            self.getJSON("dimensions/output", function(error, outputDimensions) {
                 self.outputDimensions = outputDimensions || [];
             });
         },

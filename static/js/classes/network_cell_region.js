@@ -10,9 +10,10 @@ var NetworkCellRegion = CellRegion.extend(function(base) {
         getList: function(type, callback) {
             var self = this,
                 region = this.region,
-                iteration = this.iteration;
+                iteration = this.iteration,
+                path = "states" + "/" + iteration + "/" + region + "/" + type;
 
-            self.getJSON(region + "/" + iteration + "/" + type, function(error, list) {
+            self.getJSON(path, function(error, list) {
                 callback(null, list);
             });
         },
