@@ -9,22 +9,19 @@ var EncoderVisualization = AbstractVisualization.extend(function(base) {
         },
 
         /* Public */
-        iterationChanged: function(currentSnapshot, lastSnapshot) {
-            var name = this.name,
-                snapshot = currentSnapshot,
-                region = snapshot.getEncoderRegion(name);
 
-            if (region) {
-                this.region = region;
-                this._load();
-            }
+        getRegion: function() {
+            var name = this.name,
+                snapshot = this.snapshot;
+
+            return snapshot.getEncoderRegion(name);
         },
 
-        /* Private */
+        loadData: function() {
+            var region = this.getRegion();
+            if (!region) return;
 
-        _load: function() {
-            var region = this.region,
-                name = this.name;
+            var name = this.name;
 
             region.getInput(function(error, input) {
                 console.clear();
