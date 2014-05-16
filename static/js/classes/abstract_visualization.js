@@ -293,8 +293,8 @@ var AbstractVisualization = Fiber.extend(function() {
                 inputDrawing = this.inputDrawing,
                 outputDrawing = this.outputDrawing;
 
-            inputDrawing.setLayerDimensions(_.cloneDeep(inputDimensions), this.reshape);
-            outputDrawing.setLayerDimensions(_.cloneDeep(outputDimensions), this.reshape);
+            inputDrawing.setRegionDimensions(_.cloneDeep(inputDimensions), this.reshape);
+            outputDrawing.setRegionDimensions(_.cloneDeep(outputDimensions), this.reshape);
 
             if (lastSnapshot) {
                 var lastInputDimensions = lastSnapshot.getInputCellRegion().getDimensions(),
@@ -321,8 +321,8 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this._loadLayers();
             
-            inputDrawing.setLayerDimensions(inputDimensions, this.reshape);
-            outputDrawing.setLayerDimensions(outputDimensions, this.reshape);
+            inputDrawing.setRegionDimensions(inputDimensions, this.reshape);
+            outputDrawing.setRegionDimensions(outputDimensions, this.reshape);
 
             this._redraw();
         },

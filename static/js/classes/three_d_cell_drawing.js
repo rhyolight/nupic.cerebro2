@@ -7,20 +7,20 @@ var ThreeDCellDrawing = CellDrawing.extend(function(base) {
             this.proximalLines = null;
         },
 
-        setLayerDimensions: function(layerDimensions, reshape) {
-            if (layerDimensions.length > 3) {
+        setRegionDimensions: function(regionDimensions, reshape) {
+            if (regionDimensions.length > 3) {
                 throw new Error("ThreeDVisualization only supports up to 3-dimensional layers");
             }
 
-            while (layerDimensions.length < 3) {
-                layerDimensions.push(1);
+            while (regionDimensions.length < 3) {
+                regionDimensions.push(1);
             }
 
             if (reshape) {
-                layerDimensions = this.reshape3Dimensions(layerDimensions);
+                regionDimensions = this.reshape3Dimensions(regionDimensions);
             }
 
-            base.setLayerDimensions.call(this, layerDimensions);
+            base.setRegionDimensions.call(this, regionDimensions);
         },
 
         /* Public */
@@ -29,7 +29,7 @@ var ThreeDCellDrawing = CellDrawing.extend(function(base) {
             var paddingX = 100,
                 paddingY = 100,
                 paddingZ = 50,
-                dimensions = this.layerDimensions;
+                dimensions = this.regionDimensions;
 
             if (dimensions.length != 3) {
                 throw new Error("ThreeDVisualization only supports 3-dimensional layers");
@@ -97,7 +97,7 @@ var ThreeDCellDrawing = CellDrawing.extend(function(base) {
         updateCells: function() {
             if (!this.particleSystem) return;
 
-            var dimensions = this.layerDimensions,
+            var dimensions = this.regionDimensions,
                 numZ = dimensions[2],
                 particles = this.particleSystem.geometry,
                 activeColumns = this.activeColumns,

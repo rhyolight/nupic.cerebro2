@@ -3,7 +3,7 @@ var CellDrawing = AbstractDrawing.extend(function(base) {
         init: function() {
             base.init.call(this);
 
-            this.layerDimensions = null;
+            this.regionDimensions = null;
             this.inputDrawing = null;
 
             this.showActiveColumns = true;
@@ -15,8 +15,8 @@ var CellDrawing = AbstractDrawing.extend(function(base) {
 
         /* Public */
 
-        setLayerDimensions: function(layerDimensions, reshape) {
-            this.layerDimensions = layerDimensions;
+        setRegionDimensions: function(regionDimensions, reshape) {
+            this.regionDimensions = regionDimensions;
         },
 
         setInputDrawing: function(inputDrawing) {
