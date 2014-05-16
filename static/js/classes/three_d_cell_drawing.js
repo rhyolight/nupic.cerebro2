@@ -9,7 +9,7 @@ var ThreeDCellDrawing = CellDrawing.extend(function(base) {
 
         setRegionDimensions: function(regionDimensions, reshape) {
             if (regionDimensions.length > 3) {
-                throw new Error("ThreeDVisualization only supports up to 3-dimensional layers");
+                throw new Error("ThreeDVisualization only supports up to 3-dimensional regions");
             }
 
             while (regionDimensions.length < 3) {
@@ -32,7 +32,7 @@ var ThreeDCellDrawing = CellDrawing.extend(function(base) {
                 dimensions = this.regionDimensions;
 
             if (dimensions.length != 3) {
-                throw new Error("ThreeDVisualization only supports 3-dimensional layers");
+                throw new Error("ThreeDVisualization only supports 3-dimensional regions");
             }
 
             var numX = dimensions[0],
