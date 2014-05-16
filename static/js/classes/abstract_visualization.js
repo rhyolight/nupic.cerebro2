@@ -4,6 +4,8 @@ var AbstractVisualization = Fiber.extend(function() {
             this.container = container;
             this.history = history;
 
+            this.loadDelay = 500; // default (in ms)
+
             this.renderer = null;
             this.scene = null;
             this.camera = null;
@@ -24,6 +26,8 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this.snapshot = null;
 
+            this.loadTimeout = null;
+
             this._initScene();
             this._initControls();
             this._initStats();
@@ -34,6 +38,9 @@ var AbstractVisualization = Fiber.extend(function() {
         },
 
         /* To Override */
+
+        loadData: function() {},
+        reset: function() {},
 
         // Events
         iterationChanged: function(currentSnapshot, lastSnapshot) {},
@@ -85,6 +92,20 @@ var AbstractVisualization = Fiber.extend(function() {
             if (this.stats) this.stats.end();
 
             requestAnimationFrame(this.render.bind(this));
+        },
+
+        readyToLoadData: function() {
+            var self = this,
+                timeout = this.loadTimeout,
+                delay = this.loadDelay;
+
+            if (timeout) clearTimeout(timeout);
+
+            timeout = setTimeout(function() {
+                self.loadData()
+            }, delay);
+
+            this.loadTimeout = timeout;
         },
 
         historyUpdated: function() {
@@ -277,6 +298,9 @@ var AbstractVisualization = Fiber.extend(function() {
             }
             
             this.snapshot = snapshot;
+
+            this.readyToLoadData();
+            this.reset();
 
             this.iterationChanged(snapshot, lastSnapshot); // fire public event
         },

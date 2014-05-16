@@ -2,8 +2,6 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
     return {
         init: function(container, history) {
             this.reshape = true;
-            this.loadTimeout = null;
-            this.loadDelay = 500; // default (in ms)
 
             this._initDrawings();
 
@@ -26,8 +24,6 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
         },
 
         iterationChanged: function(currentSnapshot, lastSnapshot) {
-            this._load();
-
             var snapshot = currentSnapshot,
                 inputDimensions = snapshot.getInputCellRegion().getDimensions(),
                 outputDimensions = snapshot.getOutputCellRegion().getDimensions(),
@@ -55,6 +51,70 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
             }
         },
 
+        reset: function() {
+            var inputDrawing = this.inputDrawing,
+                outputDrawing = this.outputDrawing;
+
+            inputDrawing.reset();
+            inputDrawing.updateCells();
+
+            outputDrawing.reset();
+            outputDrawing.updateCells();
+            outputDrawing.updateProximalSynapses();
+            outputDrawing.updateDistalSynapses();
+        },
+
+        loadData: function() {
+            var self = this,
+                snapshot = this.snapshot,
+                inputCellRegion = snapshot.getInputCellRegion(),
+                outputCellRegion = snapshot.getOutputCellRegion(),
+                inputDrawing = this.inputDrawing,
+                outputDrawing = this.outputDrawing;
+
+            inputCellRegion.getActiveCells(_.bind(function(error, activeCells) {
+                if (self.snapshot != this) return;
+
+                self.inputDrawing.setActiveCells(activeCells);
+                self.inputDrawing.updateCells();
+            }, snapshot));
+
+            outputCellRegion.getActiveColumns(_.bind(function(error, activeColumns) {
+                if (self.snapshot != this) return;
+
+                self.outputDrawing.setActiveColumns(activeColumns);
+                self.outputDrawing.updateCells();
+            }, snapshot));
+
+            outputCellRegion.getActiveCells(_.bind(function(error, activeCells) {
+                if (self.snapshot != this) return;
+
+                self.outputDrawing.setActiveCells(activeCells);
+                self.outputDrawing.updateCells();
+            }, snapshot));
+
+            outputCellRegion.getPredictedCells(_.bind(function(error, predictedCells) {
+                if (self.snapshot != this) return;
+
+                self.outputDrawing.setPredictedCells(predictedCells);
+                self.outputDrawing.updateCells();
+            }, snapshot));
+
+            outputCellRegion.getProximalSynapses(_.bind(function(error, proximalSynapses) {
+                if (self.snapshot != this) return;
+
+                self.outputDrawing.setProximalSynapses(proximalSynapses);
+                self.outputDrawing.updateProximalSynapses();
+            }, snapshot));
+
+            outputCellRegion.getDistalSynapses(_.bind(function(error, distalSynapses) {
+                if (self.snapshot != this) return;
+
+                self.outputDrawing.setDistalSynapses(distalSynapses);
+                self.outputDrawing.updateDistalSynapses();
+            }, snapshot));
+        },
+
         /* Private */
 
         _initDrawings: function() {
@@ -74,7 +134,8 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
                 inputDimensions = snapshot.getInputCellRegion().getDimensions(),
                 outputDimensions = snapshot.getOutputCellRegion().getDimensions();
 
-            this._load();
+            this.readyToLoadData();
+            this.reset();
             
             inputDrawing.setRegionDimensions(inputDimensions, this.reshape);
             outputDrawing.setRegionDimensions(outputDimensions, this.reshape);
@@ -98,72 +159,5 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
             scene.add(outputDrawing.getObject3D());
             scene.add(inputDrawing.getObject3D());
         },
-
-        _load: function() {
-            var self = this,
-                snapshot = this.snapshot,
-                inputCellRegion = snapshot.getInputCellRegion(),
-                outputCellRegion = snapshot.getOutputCellRegion(),
-                inputDrawing = this.inputDrawing,
-                outputDrawing = this.outputDrawing,
-                timeout = this.loadTimeout,
-                delay = this.loadDelay;
-
-            inputDrawing.reset();
-            inputDrawing.updateCells();
-
-            outputDrawing.reset();
-            outputDrawing.updateCells();
-            outputDrawing.updateProximalSynapses();
-            outputDrawing.updateDistalSynapses();
-
-            if (timeout) clearTimeout(timeout);
-
-            timeout = setTimeout(function() {
-                inputCellRegion.getActiveCells(_.bind(function(error, activeCells) {
-                    if (self.snapshot != this) return;
-
-                    self.inputDrawing.setActiveCells(activeCells);
-                    self.inputDrawing.updateCells();
-                }, snapshot));
-
-                outputCellRegion.getActiveColumns(_.bind(function(error, activeColumns) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setActiveColumns(activeColumns);
-                    self.outputDrawing.updateCells();
-                }, snapshot));
-
-                outputCellRegion.getActiveCells(_.bind(function(error, activeCells) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setActiveCells(activeCells);
-                    self.outputDrawing.updateCells();
-                }, snapshot));
-
-                outputCellRegion.getPredictedCells(_.bind(function(error, predictedCells) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setPredictedCells(predictedCells);
-                    self.outputDrawing.updateCells();
-                }, snapshot));
-
-                outputCellRegion.getProximalSynapses(_.bind(function(error, proximalSynapses) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setProximalSynapses(proximalSynapses);
-                    self.outputDrawing.updateProximalSynapses();
-                }, snapshot));
-
-                outputCellRegion.getDistalSynapses(_.bind(function(error, distalSynapses) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setDistalSynapses(distalSynapses);
-                    self.outputDrawing.updateDistalSynapses();
-                }, snapshot));
-            }, delay);
-
-            this.loadTimeout = timeout;
-        }
     };
 });
