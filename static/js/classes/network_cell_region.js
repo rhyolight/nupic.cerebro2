@@ -14,6 +14,7 @@ var NetworkCellRegion = CellRegion.extend(function(base) {
                 path = "states" + "/" + iteration + "/" + region + "/" + type;
 
             self.getJSON(path, function(error, list) {
+                list = list || [];
                 callback(null, list);
             });
         },
