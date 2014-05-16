@@ -5,7 +5,6 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             base.init.call(this, container, history, name);
 
             this.coordinateDrawing = new CoordinateSystemDrawing();
-            this._redraw();
         },
 
         /* Public */
@@ -17,6 +16,8 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             var self = this,
                 name = this.name,
                 coordinateDrawing = this.coordinateDrawing;
+
+            coordinateDrawing.reset();
 
             region.getNeighbors(function(error, neighbors) {
                 coordinateDrawing.setNeighbors(neighbors);
@@ -37,6 +38,7 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
 
             coordinateDrawing.clear();
             coordinateDrawing.setup();
+            coordinateDrawing.updateParticles();
 
             scene.add(coordinateDrawing.getObject3D());
         },
