@@ -18,10 +18,10 @@ var GUISync = Fiber.extend(function() {
         _listenForEvents: function() {
             var self = this;
 
-            var fn = this.master.iterationChanged,
-                newFn = function () {
-                    fn();
-                    self._iterationChanged();
+            var fn = _.bind(this.master.iterationChanged, this.master),
+                newFn = function (currentSnapshot, lastSnapshot) {
+                    fn(currentSnapshot, lastSnapshot);
+                    self._iterationChanged(currentSnapshot, lastSnapshot);
                 }
 
             this.master.iterationChanged = newFn;

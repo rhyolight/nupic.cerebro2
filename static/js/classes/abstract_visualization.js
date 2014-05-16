@@ -22,35 +22,58 @@ var AbstractVisualization = Fiber.extend(function() {
             this.speed = 500;
             this.maxSpeed = 1000;
 
-            this.reshape = true;
-
             this.snapshot = null;
-            this.loadLayersTimeout = null;
-            this.loadLayersTimeoutDuration = 500; // default (in ms)
 
-            this._initDrawings();
+            this._initScene();
             this._initControls();
             this._initStats();
-            this._initGUI();
+
+            this.initGUI();
 
             this.historyUpdated();
         },
 
         /* To Override */
 
-        getInputDrawing: function() {return null;},
-        getOutputDrawing: function() {return null;},
-        initCamera: function(width, height) {return null;},
-        positionDrawings: function(inputDrawing, outputDrawing) {},
-        addGuiControls: function() {},
-
         // Events
-        iterationChanged: function() {},
+        iterationChanged: function(currentSnapshot, lastSnapshot) {},
 
         /* Public */
+
         initRenderer: function() {
             return new THREE.WebGLRenderer();
         },
+
+        initCamera: function(width, height) {
+            var viewAngle = 45,
+                aspect = width / height,
+                near = 0.1,
+                far = 10000;
+                camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
+
+            return camera;
+        },
+
+        initGUI: function() {
+            var gui = new dat.GUI({ autoPlace: false }),
+                domElement = $(gui.domElement);
+
+            domElement.addClass("controls");
+            this.container.append(domElement);
+
+            this.next = this._nextIteration;
+            this.prev = this._prevIteration;
+
+            this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
+            gui.add(this, 'play');
+            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
+            gui.add(this, 'next');
+            gui.add(this, 'prev');
+
+            this.gui = gui;
+        },
+
+        /* Public */
 
         render: function() {
             if (this.stats) this.stats.begin();
@@ -157,7 +180,7 @@ var AbstractVisualization = Fiber.extend(function() {
             $(controller.__li).addClass("hidden");
         },
 
-        _initDrawings: function() {
+        _initScene: function() {
             var container = this.container,
                 width = container.width(),
                 height = container.height();
@@ -174,14 +197,6 @@ var AbstractVisualization = Fiber.extend(function() {
             this.renderer = renderer;
             this.camera = camera;
             this.scene = scene;
-
-            var inputDrawing = this.getInputDrawing(),
-                outputDrawing = this.getOutputDrawing();
-
-            outputDrawing.setInputDrawing(inputDrawing);
-
-            this.inputDrawing = inputDrawing;
-            this.outputDrawing = outputDrawing;
 
             this._watchForResize();
         },
@@ -234,30 +249,9 @@ var AbstractVisualization = Fiber.extend(function() {
             this.stats = stats;
         },
 
-        _initGUI: function() {
-            var gui = new dat.GUI({ autoPlace: false }),
-                domElement = $(gui.domElement);
-
-            domElement.addClass("controls");
-            this.container.append(domElement);
-
-            this.next = this._nextIteration;
-            this.prev = this._prevIteration;
-
-            this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
-            gui.add(this, 'play');
-            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
-            gui.add(this, 'next');
-            gui.add(this, 'prev');
-
-            this.gui = gui;
-            this.addGuiControls();
-        },
-
         _update: function() {
             if (this.lastIteration != this.iteration) {
-                this._iterationUpdated();
-                this.iterationChanged(); // fire event
+                this._iterationChanged();
                 this.lastIteration = this.iteration;
             }
         },
@@ -272,7 +266,7 @@ var AbstractVisualization = Fiber.extend(function() {
             this.iteration = Math.max(this.iteration - 1, 1);
         },
 
-        _iterationUpdated: function() {
+        _iterationChanged: function() {
             var lastSnapshot = this.snapshot,
                 snapshot = this.history.getSnapshotAtIndex(this.iteration - 1);
 
@@ -281,134 +275,10 @@ var AbstractVisualization = Fiber.extend(function() {
                 console.log("History length: " + this.history.length());
                 return;
             }
-
+            
             this.snapshot = snapshot;
 
-            this._loadLayers();
-
-            var inputDimensions = snapshot.getInputLayer().getDimensions(),
-                outputDimensions = snapshot.getOutputLayer().getDimensions(),
-                inputDimensionsChanged = true,
-                outputDimensionsChanged = true,
-                inputDrawing = this.inputDrawing,
-                outputDrawing = this.outputDrawing;
-
-            inputDrawing.setLayerDimensions(_.cloneDeep(inputDimensions), this.reshape);
-            outputDrawing.setLayerDimensions(_.cloneDeep(outputDimensions), this.reshape);
-
-            if (lastSnapshot) {
-                var lastInputDimensions = lastSnapshot.getInputLayer().getDimensions(),
-                    lastOutputDimensions = lastSnapshot.getOutputLayer().getDimensions();
-
-                if (_.isEqual(inputDimensions, lastInputDimensions))
-                    inputDimensionsChanged = false;
-
-                if (_.isEqual(outputDimensions, lastOutputDimensions))
-                    outputDimensionsChanged = false;
-            }
-
-            if (inputDimensionsChanged || outputDimensionsChanged) {
-                this._redraw();
-            }
+            this.iterationChanged(snapshot, lastSnapshot); // fire public event
         },
-
-        _reshapeUpdated: function() {
-            var inputDrawing = this.inputDrawing,
-                outputDrawing = this.outputDrawing,
-                snapshot = this.snapshot,
-                inputDimensions = snapshot.getInputLayer().getDimensions(),
-                outputDimensions = snapshot.getOutputLayer().getDimensions();
-
-            this._loadLayers();
-            
-            inputDrawing.setLayerDimensions(inputDimensions, this.reshape);
-            outputDrawing.setLayerDimensions(outputDimensions, this.reshape);
-
-            this._redraw();
-        },
-
-        _redraw: function() {
-            var inputDrawing = this.inputDrawing,
-                outputDrawing = this.outputDrawing,
-                scene = this.scene;
-
-            inputDrawing.clear();
-            inputDrawing.setup();
-
-            outputDrawing.clear();
-            outputDrawing.setup();
-
-            this.positionDrawings(inputDrawing, outputDrawing);
-
-            scene.add(outputDrawing.getObject3D());
-            scene.add(inputDrawing.getObject3D());
-        },
-
-        _loadLayers: function() {
-            var self = this,
-                snapshot = this.snapshot,
-                inputLayer = snapshot.getInputLayer(),
-                outputLayer = snapshot.getOutputLayer(),
-                inputDrawing = this.inputDrawing,
-                outputDrawing = this.outputDrawing,
-                timeout = this.loadLayersTimeout,
-                timeoutDuration = this.loadLayersTimeoutDuration;
-
-            inputDrawing.reset();
-            inputDrawing.updateCells();
-
-            outputDrawing.reset();
-            outputDrawing.updateCells();
-            outputDrawing.updateProximalSynapses();
-            outputDrawing.updateDistalSynapses();
-
-            if (timeout) clearTimeout(timeout);
-
-            timeout = setTimeout(function() {
-                inputLayer.getActiveCells(_.bind(function(error, activeCells) {
-                    if (self.snapshot != this) return;
-
-                    self.inputDrawing.setActiveCells(activeCells);
-                    self.inputDrawing.updateCells();
-                }, snapshot));
-
-                outputLayer.getActiveColumns(_.bind(function(error, activeColumns) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setActiveColumns(activeColumns);
-                    self.outputDrawing.updateCells();
-                }, snapshot));
-
-                outputLayer.getActiveCells(_.bind(function(error, activeCells) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setActiveCells(activeCells);
-                    self.outputDrawing.updateCells();
-                }, snapshot));
-
-                outputLayer.getPredictedCells(_.bind(function(error, predictedCells) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setPredictedCells(predictedCells);
-                    self.outputDrawing.updateCells();
-                }, snapshot));
-
-                outputLayer.getProximalSynapses(_.bind(function(error, proximalSynapses) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setProximalSynapses(proximalSynapses);
-                    self.outputDrawing.updateProximalSynapses();
-                }, snapshot));
-
-                outputLayer.getDistalSynapses(_.bind(function(error, distalSynapses) {
-                    if (self.snapshot != this) return;
-
-                    self.outputDrawing.setDistalSynapses(distalSynapses);
-                    self.outputDrawing.updateDistalSynapses();
-                }, snapshot));
-            }, timeoutDuration);
-
-            this.loadLayersTimeout = timeout;
-        }
     };
 });

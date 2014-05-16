@@ -1,18 +1,18 @@
-var NetworkLayer = AbstractLayer.extend(function(base) {
+var NetworkCellRegion = CellRegion.extend(function(base) {
     return {
-        init: function(dimensions, layer, iteration, modelURL) {
+        init: function(dimensions, region, iteration, modelURL) {
             base.init.call(this, dimensions);
-            this.layer = layer;
+            this.region = region;
             this.iteration = iteration;
             this.modelURL = modelURL;
         },
 
         getList: function(type, callback) {
             var self = this,
-                layer = this.layer,
+                region = this.region,
                 iteration = this.iteration;
 
-            self.getJSON(layer + "/" + iteration + "/" + type, function(error, list) {
+            self.getJSON(region + "/" + iteration + "/" + type, function(error, list) {
                 callback(null, list);
             });
         },
@@ -56,4 +56,4 @@ var NetworkLayer = AbstractLayer.extend(function(base) {
     };
 });
 
-Fiber.mixin(NetworkLayer, NetworkMixin);
+Fiber.mixin(NetworkCellRegion, NetworkMixin);

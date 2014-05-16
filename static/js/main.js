@@ -1,6 +1,6 @@
 /* Main */
 
-var loadLayersTimeoutDuration = intParam('loadLayersTimeoutDuration') || 0,
+var loadDelay = intParam('loadDelay') || 0,
     modelURL = strParam('modelURL') || defaultModelURL();
 
 var container3D = $('#container-3D'),
@@ -8,13 +8,13 @@ var container3D = $('#container-3D'),
 
 var model = new NetworkReadonlyModel(modelURL),
     history = new History(),
-    visualization3D = new ThreeDVisualization(container3D, history),
-    visualization2D = new TwoDVisualization(container2D, history);
+    visualization3D = new ThreeDCellVisualization(container3D, history),
+    visualization2D = new TwoDCellVisualization(container2D, history);
 
-visualization3D.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
+visualization3D.loadDelay = loadDelay;
 visualization3D.render();
 
-visualization2D.loadLayersTimeoutDuration = loadLayersTimeoutDuration;
+visualization2D.loadDelay = loadDelay;
 visualization2D.render();
 
 var sync = new GUISync(visualization3D);
