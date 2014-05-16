@@ -25,8 +25,8 @@ var AbstractVisualization = Fiber.extend(function() {
             this.reshape = true;
 
             this.snapshot = null;
-            this.loadLayersTimeout = null;
-            this.loadLayersTimeoutDuration = 500; // default (in ms)
+            this.loadTimeout = null;
+            this.loadDelay = 500; // default (in ms)
 
             this._initDrawings();
             this._initControls();
@@ -284,7 +284,7 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this.snapshot = snapshot;
 
-            this._loadLayers();
+            this._load();
 
             var inputDimensions = snapshot.getInputCellRegion().getDimensions(),
                 outputDimensions = snapshot.getOutputCellRegion().getDimensions(),
@@ -319,7 +319,7 @@ var AbstractVisualization = Fiber.extend(function() {
                 inputDimensions = snapshot.getInputCellRegion().getDimensions(),
                 outputDimensions = snapshot.getOutputCellRegion().getDimensions();
 
-            this._loadLayers();
+            this._load();
             
             inputDrawing.setRegionDimensions(inputDimensions, this.reshape);
             outputDrawing.setRegionDimensions(outputDimensions, this.reshape);
@@ -344,15 +344,15 @@ var AbstractVisualization = Fiber.extend(function() {
             scene.add(inputDrawing.getObject3D());
         },
 
-        _loadLayers: function() {
+        _load: function() {
             var self = this,
                 snapshot = this.snapshot,
                 inputCellRegion = snapshot.getInputCellRegion(),
                 outputCellRegion = snapshot.getOutputCellRegion(),
                 inputDrawing = this.inputDrawing,
                 outputDrawing = this.outputDrawing,
-                timeout = this.loadLayersTimeout,
-                timeoutDuration = this.loadLayersTimeoutDuration;
+                timeout = this.loadTimeout,
+                delay = this.loadDelay;
 
             inputDrawing.reset();
             inputDrawing.updateCells();
@@ -406,9 +406,9 @@ var AbstractVisualization = Fiber.extend(function() {
                     self.outputDrawing.setDistalSynapses(distalSynapses);
                     self.outputDrawing.updateDistalSynapses();
                 }, snapshot));
-            }, timeoutDuration);
+            }, delay);
 
-            this.loadLayersTimeout = timeout;
+            this.loadTimeout = timeout;
         }
     };
 });
