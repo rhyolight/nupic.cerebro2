@@ -79,9 +79,10 @@ var NetworkReadonlyModel = AbstractModel.extend(function(base) {
                 var encoder = encoders[i],
                     name = encoder.name,
                     cls = encoder.cls,
-                    encoderRegion = new NetworkEncoderRegion(name,
-                                                             iteration,
-                                                             modelURL);
+                    regionClass = window["Network" + cls + "Region"] || NetworkEncoderRegion,
+                    encoderRegion = new regionClass(name,
+                                                    iteration,
+                                                    modelURL);
 
                 snapshot.addEncoderRegion(encoderRegion);
             }
