@@ -60,11 +60,11 @@ var CoordinateSystemDrawing = AbstractDrawing.extend(function(base) {
             for (var i = 0; i < particles.vertices.length; i++) {
                 var coordinate = neighbors[i];
 
-                var color = COLOR_DARK_ACTIVE_CELL,
+                var color = COLOR_DARK_NEIGHBOR,
                     topWCoordinatesCache = {};
 
                 if (_.fastContains(topWCoordinates, coordinate, topWCoordinatesCache)) {
-                    color = COLOR_DARK_PREDICTED_CELL;
+                    color = COLOR_DARK_ACTIVE_NEIGHBOR;
                 }
 
                 particles.colors[i].setHex(color);
@@ -110,7 +110,7 @@ var CoordinateSystemDrawing = AbstractDrawing.extend(function(base) {
                     particle = new THREE.Vector3(pX, pY, pZ);
 
                     particles.vertices.push(particle);
-                    particles.colors.push(new THREE.Color(COLOR_DARK_ACTIVE_CELL));
+                    particles.colors.push(new THREE.Color(COLOR_DARK_NEIGHBOR));
             }
 
             return particleSystem;
