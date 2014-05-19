@@ -87,6 +87,7 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this._update();
             this.controls.update();
+            TWEEN.update();
             this.renderer.render(this.scene, this.camera);
 
             if (this.stats) this.stats.end();

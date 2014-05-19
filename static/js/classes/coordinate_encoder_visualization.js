@@ -2,6 +2,8 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
     return {
         init: function(container, history, name) {
             this.name = name;
+            this.autofocus = true;
+
             base.init.call(this, container, history, name);
 
             this.coordinateDrawing = new CoordinateSystemDrawing();
@@ -33,12 +35,12 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
         initGUI: function() {
             base.initGUI.call(this);
 
+            var autoFocusCamera = _.bind(this._autoFocusCamera , this);
             this.resetCamera = this._resetCamera;
-            this.focusCamera = this._focusCamera;
 
             var cameraFolder = this.gui.addFolder('Camera');
             cameraFolder.add(this, 'resetCamera');
-            cameraFolder.add(this, 'focusCamera');
+            cameraFolder.add(this, 'autofocus').onChange(autoFocusCamera);
             cameraFolder.open();
         },
 
@@ -53,6 +55,8 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             coordinateDrawing.updateParticles();
 
             scene.add(coordinateDrawing.getObject3D());
+
+            this._autoFocusCamera();
         },
 
         _resetCamera: function() {
@@ -61,6 +65,12 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
 
             camera.position.set(300, 500, 1200);
             controls.target = new THREE.Vector3(0, 0, 0);
+        },
+
+        _autoFocusCamera: function() {
+            if (this.autofocus) {
+                this._focusCamera();
+            }
         },
 
         _focusCamera: function() {
@@ -75,12 +85,22 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             var min = geometry.boundingBox.min,
                 max = geometry.boundingBox.max,
                 size = new THREE.Vector3().subVectors(max, min),
-                center = new THREE.Vector3().addVectors(min, max).divideScalar(2);
-                z = Math.max.apply(Math, size.toArray()) * 5,
-                overCenter = new THREE.Vector3().copy(center).setZ(z);
+                center = new THREE.Vector3().addVectors(min, max).divideScalar(2),
+                maxSize = Math.max.apply(Math, size.toArray()),
+                z = Math.sqrt(maxSize) * 10,
+                overCenter = new THREE.Vector3().copy(center).setZ(z),
+                duration = 250;
 
-            camera.position = overCenter;
-            controls.target = center;
+            new TWEEN.Tween(camera.position).to({
+                    x: overCenter.x,
+                    y: overCenter.y,
+                    z: overCenter.z},
+                duration).easing(TWEEN.Easing.Linear.None).start();
+            new TWEEN.Tween(controls.target).to({
+                    x: center.x,
+                    y: center.y,
+                    z: center.z},
+                duration).easing(TWEEN.Easing.Linear.None).start();
         },
     };
 });
