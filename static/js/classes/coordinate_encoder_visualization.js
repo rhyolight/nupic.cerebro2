@@ -59,6 +59,35 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             this._autoFocusCamera();
         },
 
+        _initScene: function() {  // TODO: make initScene a public method in AbstractVisualization
+            base._initScene.call(this);
+
+            this._addGrid();
+        },
+
+        _addGrid: function() {
+            var scene = this.scene,
+                size = 5000,
+                step = 10;
+
+            var geometry = new THREE.Geometry();
+            var material = new THREE.LineBasicMaterial({
+                color: 0x777777,
+                opacity: 0.1
+            });
+
+            for (var i = -size; i <= size; i += step) {
+                geometry.vertices.push(new THREE.Vector3(-size, i, 0));
+                geometry.vertices.push(new THREE.Vector3( size, i, 0));
+
+                geometry.vertices.push(new THREE.Vector3(i, -size, 0));
+                geometry.vertices.push(new THREE.Vector3(i,  size, 0));
+            }
+
+            var line = new THREE.Line(geometry, material, THREE.LinePieces);
+            scene.add(line);
+        },
+
         _resetCamera: function() {
             var camera = this.camera,
                 controls = this.controls;
