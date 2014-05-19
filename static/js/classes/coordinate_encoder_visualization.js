@@ -89,18 +89,19 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
                 maxSize = Math.max.apply(Math, size.toArray()),
                 z = Math.sqrt(maxSize) * 10,
                 overCenter = new THREE.Vector3().copy(center).setZ(z),
-                duration = 250;
+                duration = 350,
+                easing = TWEEN.Easing.Exponential.InOut;
 
             new TWEEN.Tween(camera.position).to({
                     x: overCenter.x,
                     y: overCenter.y,
                     z: overCenter.z},
-                duration).easing(TWEEN.Easing.Linear.None).start();
+                duration).easing(easing).start();
             new TWEEN.Tween(controls.target).to({
                     x: center.x,
                     y: center.y,
                     z: center.z},
-                duration).easing(TWEEN.Easing.Linear.None).start();
+                duration).easing(easing).start();
         },
     };
 });
