@@ -1,13 +1,8 @@
 var ThreeDCellVisualization = CellVisualization.extend(function(base) {
     return {
-        initCamera: function(width, height) {
-            var camera = base.initCamera.call(this, width, height);
-
-            camera.position.set(2000, 2000, 500);
-            camera.lookAt(0, 0, 0);
-            camera.up.set(0, 0, 1);
-
-            return camera;
+        
+        positionCamera: function() {
+            this.viewDefault();
         },
 
         initGUI: function() {
@@ -25,8 +20,14 @@ var ThreeDCellVisualization = CellVisualization.extend(function(base) {
             viewFolder.add(this.outputDrawing, 'showProximalSynapses').onChange(updateProximalSynapses);
             viewFolder.add(this.outputDrawing, 'showDistalSynapses').onChange(updateDistalSynapses);
 
-            // disable some controllers
-            this._disableController('speed');
+            var cameraControls = this.gui.addFolder('Camera');
+            cameraControls.add(this, 'viewDefault').name('default');
+            cameraControls.add(this, 'viewFront').name('front');
+            cameraControls.add(this, 'viewBack').name('back');
+            cameraControls.add(this, 'viewTop').name('top');
+            cameraControls.add(this, 'viewBottom').name('bottom');
+            cameraControls.add(this, 'viewLeft').name('left');
+            cameraControls.add(this, 'viewRight').name('right');
         },
 
         getInputDrawing: function() {

@@ -29,10 +29,7 @@ var GUISync = Fiber.extend(function() {
 
         _hideControllers: function(child) {
             child._hideController('iteration');
-            child._hideController('play');
-            child._hideController('speed');
-            child._hideController('next');
-            child._hideController('prev');
+            child._hideFolder('Animation');
         },
 
         _iterationChanged: function() {

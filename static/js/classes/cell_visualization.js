@@ -13,6 +13,7 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
         getInputDrawing: function() {return null;},
         getOutputDrawing: function() {return null;},
         positionDrawings: function(inputDrawing, outputDrawing) {},
+        positionCamera: function() {},
 
         /* Public */
 
@@ -21,6 +22,12 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
 
             var reshapeUpdated = _.bind(this._reshapeUpdated , this);
             this.gui.add(this, 'reshape').onChange(reshapeUpdated);
+
+            var animationControls = this.gui.addFolder('Animation');
+            animationControls.add(this, 'play');
+            animationControls.add(this, 'speed', 0, this.maxSpeed).step(1);
+            animationControls.add(this, 'next');
+            animationControls.add(this, 'prev');
         },
 
         iterationChanged: function(currentSnapshot, lastSnapshot) {
@@ -158,6 +165,7 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
 
             scene.add(outputDrawing.getObject3D());
             scene.add(inputDrawing.getObject3D());
+            this.positionCamera();
         },
     };
 });

@@ -72,15 +72,9 @@ var AbstractVisualization = Fiber.extend(function() {
             this.prev = this._prevIteration;
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
-            gui.add(this, 'play');
-            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
-            gui.add(this, 'next');
-            gui.add(this, 'prev');
 
             this.gui = gui;
         },
-
-        /* Public */
 
         render: function() {
             if (this.stats) this.stats.begin();
@@ -125,7 +119,6 @@ var AbstractVisualization = Fiber.extend(function() {
 
         play: function() {
             if (!this.playing) {
-                this._enableController('speed');
                 this._enableController('pause');
                 this._player();
                 this.playing = true;
@@ -139,7 +132,55 @@ var AbstractVisualization = Fiber.extend(function() {
             clearTimeout(this.timer);
             this.playing = false;
             this._changeControllerText("play", "play");
-            this._disableController('speed');
+        },
+
+        viewDefault: function() {
+            var x = this._calculateCameraDistance("x");
+            this.camera.position.set(-x,-x,(x/4));
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewFront: function() {
+            var x = this._calculateCameraDistance("x");
+            this.camera.position.set(0, -x, 0);
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewBack: function() {
+            var x = this._calculateCameraDistance("x");
+            this.camera.position.set(0, x, 0);
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewTop: function() {
+            var z = this._calculateCameraDistance("z");
+            this.camera.position.set(0, 0, z);
+            this.camera.up.set(0, 1, 0);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewBottom: function() {
+            var z = this._calculateCameraDistance("z");
+            this.camera.position.set(0, 0, -z);
+            this.camera.up.set(0, -1, 0);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewLeft: function() {
+            var y = this._calculateCameraDistance("y");
+            this.camera.position.set(-y,0,0);
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewRight: function() {
+            var y = this._calculateCameraDistance("y");
+            this.camera.position.set(y,0,0);
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
         },
 
         /* Private */
@@ -156,10 +197,12 @@ var AbstractVisualization = Fiber.extend(function() {
         },
 
         _changeControllerText: function(name, label) {
-            for (var i = 0; i < this.gui.__controllers.length; i++) {
-                if (this.gui.__controllers[i].property === name) {
-                    this.gui.__controllers[i].name(label);
-                }
+            var controller = this._findController(name);
+            if(controller) {
+                controller.name(label);
+                return controller.property;
+            } else {
+                return false;
             }
         },
 
@@ -168,15 +211,34 @@ var AbstractVisualization = Fiber.extend(function() {
         },
 
         _findController: function(controllerName) {
-            for (var i = 0; i < this.gui.__controllers.length; i++) {
-                var controller = this.gui.__controllers[i];
+            // first we look in the top level
+            var controller = this._findControllerHelper(this.gui, controllerName);
+            if (controller) {
+                return controller;
+            // then the folders
+            } else {
+                for (folder in this.gui.__folders) {
+                    controller = this._findControllerHelper(this.gui.__folders[folder], controllerName);
+                    if (controller) {
+                        return controller;
+                    }
+                }
+            }
+            return null;
+        },
 
+        _findControllerHelper: function(obj, controllerName) {
+            for (var i = 0; i < obj.__controllers.length; i++) {
+                var controller = obj.__controllers[i];
                 if (controller.property === controllerName) {
                     return controller;
                 }
             }
-
             return null;
+        },
+
+        _findFolder: function(folderName) {
+            return (_.isUndefined(this.gui.__folders[folderName])) ? null : this.gui.__folders[folderName];
         },
 
         _disableController: function(controllerName) {
@@ -201,6 +263,13 @@ var AbstractVisualization = Fiber.extend(function() {
             $(controller.__li).addClass("hidden");
         },
 
+        _hideFolder: function(folderName) {
+            var folder = this._findFolder(folderName);
+            if (!folder) return;
+
+            $(folder.__ul).addClass("hidden");
+        },
+
         _initScene: function() {
             var container = this.container,
                 width = container.width(),
@@ -218,6 +287,7 @@ var AbstractVisualization = Fiber.extend(function() {
             this.renderer = renderer;
             this.camera = camera;
             this.scene = scene;
+            this.fov = this.camera.fov; // this may be used by a subclass
 
             this._watchForResize();
         },
@@ -304,5 +374,22 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this.iterationChanged(snapshot, lastSnapshot); // fire public event
         },
+
+        _calculateCameraDistance: function(axis) {
+            var inputSize = this.inputDrawing.getSize(),
+                outputSize = this.outputDrawing.getSize(),
+                size = new THREE.Vector3().addVectors(inputSize, outputSize),
+                height = (axis === "z") ? size.y : size.z,
+                max = Math.max(size.x,height),
+                min = Math.min(2000,max);
+            // equation based on: http://stackoverflow.com/questions/14614252/how-to-fit-camera-to-object
+            var dist = (min / 2) / Math.tan(Math.PI * this.camera.fov / 360);
+            return dist;
+        },
+
+        _updateFOV: function(value) {
+            this.camera.fov = value;
+            this.camera.updateProjectionMatrix();
+        }
     };
 });
