@@ -17,14 +17,17 @@ var GeospatialCoordinateEncoderVisualization = CoordinateEncoderVisualization.ex
 
             base._redraw.call(this);
 
-            var self = this;
+            var self = this,
+                currentMap = this.map;
 
             region.getInput(function(error, input) {
                 var longitude = input[0],
                     latitude = input[1],
                     scale = region.params.scale;
 
-                self._addMap(longitude, latitude, scale);
+                if (self.map == currentMap) {
+                    self._addMap(longitude, latitude, scale);
+                }
             });
         },
 
@@ -33,7 +36,6 @@ var GeospatialCoordinateEncoderVisualization = CoordinateEncoderVisualization.ex
             // different from the projection used by Google Maps.
             var self = this,
                 scene = this.scene,
-                map = this.map,
                 boundingBox = this._particleSystemBoundingBox(),
                 min = boundingBox.min,
                 max = boundingBox.max,
@@ -66,7 +68,7 @@ var GeospatialCoordinateEncoderVisualization = CoordinateEncoderVisualization.ex
                 mesh.position = center;
                 mesh.position.setZ(-1); // slightly behind origin plane
 
-                if (map) scene.remove(map);
+                if (self.map) scene.remove(self.map);
                 scene.add(mesh);
 
                 self.map = mesh;
