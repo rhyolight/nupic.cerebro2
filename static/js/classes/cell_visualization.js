@@ -17,17 +17,53 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
 
         /* Public */
 
-        initGUI: function() {
-            base.initGUI.call(this);
+        viewDefault: function() {
+            var x = this._calculateCameraDistance("x");
+            this.camera.position.set(-x,-x,(x/4));
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
 
-            var reshapeUpdated = _.bind(this._reshapeUpdated , this);
-            this.gui.add(this, 'reshape').onChange(reshapeUpdated);
+        viewFront: function() {
+            var x = this._calculateCameraDistance("x");
+            this.camera.position.set(0, -x, 0);
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
 
-            var animationControls = this.gui.addFolder('Animation');
-            animationControls.add(this, 'play');
-            animationControls.add(this, 'speed', 0, this.maxSpeed).step(1);
-            animationControls.add(this, 'next');
-            animationControls.add(this, 'prev');
+        viewBack: function() {
+            var x = this._calculateCameraDistance("x");
+            this.camera.position.set(0, x, 0);
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewTop: function() {
+            var z = this._calculateCameraDistance("z");
+            this.camera.position.set(0, 0, z);
+            this.camera.up.set(0, 1, 0);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewBottom: function() {
+            var z = this._calculateCameraDistance("z");
+            this.camera.position.set(0, 0, -z);
+            this.camera.up.set(0, -1, 0);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewLeft: function() {
+            var y = this._calculateCameraDistance("y");
+            this.camera.position.set(-y,0,0);
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
+        },
+
+        viewRight: function() {
+            var y = this._calculateCameraDistance("y");
+            this.camera.position.set(y,0,0);
+            this.camera.up.set(0, 0, 1);
+            this.controls.target = new THREE.Vector3(0,0,0);
         },
 
         iterationChanged: function(currentSnapshot, lastSnapshot) {
@@ -167,5 +203,17 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
             scene.add(inputDrawing.getObject3D());
             this.positionCamera();
         },
+
+        _calculateCameraDistance: function(axis) {
+            var inputSize = this.inputDrawing.getSize(),
+                outputSize = this.outputDrawing.getSize(),
+                size = new THREE.Vector3().addVectors(inputSize, outputSize),
+                height = (axis === "z") ? size.y : size.z,
+                max = Math.max(size.x, height),
+                min = Math.min(2000, max);
+            // equation based on: http://stackoverflow.com/questions/14614252/how-to-fit-camera-to-object
+            var dist = (min / 2) / Math.tan(Math.PI * this.camera.fov / 360);
+            return dist;
+        }
     };
 });
