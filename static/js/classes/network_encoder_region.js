@@ -1,7 +1,7 @@
 var NetworkEncoderRegion = EncoderRegion.extend(function(base) {
     return {
-        init: function(name, iteration, modelURL) {
-            base.init.call(this, name);
+        init: function(name, params, iteration, modelURL) {
+            base.init.call(this, name, params);
             this.iteration = iteration;
             this.modelURL = modelURL;
         },
