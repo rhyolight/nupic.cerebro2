@@ -7,6 +7,7 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             base.init.call(this, container, history, name);
 
             this.coordinateDrawing = new CoordinateSystemDrawing();
+            this.grid = null;
         },
 
         /* Public */
@@ -56,19 +57,20 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
 
             scene.add(coordinateDrawing.getObject3D());
 
-            this._autoFocusCamera();
-        },
-
-        _initScene: function() {  // TODO: make initScene a public method in AbstractVisualization
-            base._initScene.call(this);
-
             this._addGrid();
+
+            this._autoFocusCamera();
         },
 
         _addGrid: function() {
             var scene = this.scene,
+                grid = this.grid,
                 size = 5000,
                 step = 10;
+
+            if (grid) {
+                scene.remove(grid);
+            }
 
             var geometry = new THREE.Geometry();
             var material = new THREE.LineBasicMaterial({
@@ -85,7 +87,21 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             }
 
             var line = new THREE.Line(geometry, material, THREE.LinePieces);
+
+            // Position grid around current coordinate
+            var boundingBox = this._particleSystemBoundingBox(),
+                min = boundingBox.min,
+                max = boundingBox.max,
+                center = new THREE.Vector3().addVectors(min, max).divideScalar(2),
+                x = Math.round(center.x / step) * step,
+                y = Math.round(center.y / step) * step,
+                z = Math.round(center.z / step) * step,
+                roundedCenter = new THREE.Vector3(x, y, z);
+
+            line.position = roundedCenter;
+
             scene.add(line);
+            this.grid = line;
         },
 
         _resetCamera: function() {
@@ -105,18 +121,13 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
         _focusCamera: function() {
             var camera = this.camera,
                 controls = this.controls,
-                coordinateDrawing = this.coordinateDrawing,
-                particleSystem = coordinateDrawing.particleSystem;
-                geometry = particleSystem.geometry;
-
-            geometry.computeBoundingBox();
-
-            var min = geometry.boundingBox.min,
-                max = geometry.boundingBox.max,
+                boundingBox = this._particleSystemBoundingBox();
+                min = boundingBox.min,
+                max = boundingBox.max,
                 size = new THREE.Vector3().subVectors(max, min),
                 center = new THREE.Vector3().addVectors(min, max).divideScalar(2),
                 maxSize = Math.max.apply(Math, size.toArray()),
-                z = Math.sqrt(maxSize) * 10,
+                z = Math.sqrt(maxSize) * 50,
                 overCenter = new THREE.Vector3().copy(center).setZ(z),
                 duration = 350,
                 easing = TWEEN.Easing.Exponential.InOut;
@@ -132,5 +143,15 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
                     z: center.z},
                 duration).easing(easing).start();
         },
+
+        _particleSystemBoundingBox: function() {
+            var coordinateDrawing = this.coordinateDrawing,
+                particleSystem = coordinateDrawing.particleSystem,
+                geometry = particleSystem.geometry;
+
+            geometry.computeBoundingBox();
+
+            return geometry.boundingBox;
+        }
     };
 });
