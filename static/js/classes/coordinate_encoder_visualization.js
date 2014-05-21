@@ -14,7 +14,10 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
 
         loadData: function() {
             var region = this.getRegion();
-            if (!region) return;
+            if (!region) {
+                console.log("Error in loadData: region not found.")
+                return;
+            }
 
             var self = this,
                 name = this.name,
