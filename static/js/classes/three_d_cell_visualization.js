@@ -1,5 +1,11 @@
 var ThreeDCellVisualization = CellVisualization.extend(function(base) {
     return {
+        initRenderer: function() {
+            var renderer = base.initRenderer.call(this);
+            renderer.setClearColor(COLOR_DARK_BACKGROUND);
+            return renderer;
+        },
+
         initCamera: function(width, height) {
             var camera = base.initCamera.call(this, width, height);
 
