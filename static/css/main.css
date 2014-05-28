@@ -29,6 +29,6 @@
 	opacity:0.5;
 }
 
-.controls ul li.hidden {
+.controls .hidden {
 	display: none;
 }
