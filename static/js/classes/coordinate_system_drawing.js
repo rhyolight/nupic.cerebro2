@@ -21,7 +21,7 @@ var CoordinateSystemDrawing = AbstractDrawing.extend(function(base) {
 
         setup: function() {
             var object3D = this.getObject3D(),
-                axes = this._buildAxes(1000)
+                axes = this._buildAxes(1000),
                 particleSystem = this._buildParticleSystem();
 
             object3D.add(axes);
