@@ -10,6 +10,12 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
             this.grid = null;
         },
 
+        initRenderer: function() {
+            var renderer = base.initRenderer.call(this);
+            renderer.setClearColor(COLOR_DARK_BACKGROUND);
+            return renderer;
+        },
+
         /* Public */
 
         loadData: function() {
@@ -77,7 +83,7 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
 
             var geometry = new THREE.Geometry();
             var material = new THREE.LineBasicMaterial({
-                color: 0x777777,
+                color: COLOR_DARK_GRID,
                 opacity: 0.1
             });
 

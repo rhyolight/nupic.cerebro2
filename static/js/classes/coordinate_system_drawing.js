@@ -90,7 +90,7 @@ var CoordinateSystemDrawing = AbstractDrawing.extend(function(base) {
 
             var particles = new THREE.Geometry(),
                 material = new THREE.ParticleBasicMaterial({
-                    size: 1,
+                    size: 3,
                     map: THREE.ImageUtils.loadTexture(
                         "img/particle.png"
                     ),
