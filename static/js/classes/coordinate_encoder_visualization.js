@@ -12,7 +12,7 @@ var CoordinateEncoderVisualization = EncoderVisualization.extend(function(base) 
 
         initRenderer: function() {
             var renderer = base.initRenderer.call(this);
-            renderer.setClearColor(COLOR_DARK_BACKGROUND);
+            renderer.setClearColor(COLOR_BLACK_BACKGROUND);
             return renderer;
         },
 
