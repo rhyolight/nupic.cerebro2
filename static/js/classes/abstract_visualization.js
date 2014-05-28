@@ -72,15 +72,18 @@ var AbstractVisualization = Fiber.extend(function() {
             this.prev = this._prevIteration;
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
-            gui.add(this, 'play');
-            gui.add(this, 'speed', 0, this.maxSpeed).step(1);
-            gui.add(this, 'next');
-            gui.add(this, 'prev');
+
+            var reshapeUpdated = _.bind(this._reshapeUpdated , this);
+            gui.add(this, 'reshape').onChange(reshapeUpdated);
+
+            var animationControls = gui.addFolder('Animation');
+            animationControls.add(this, 'play');
+            animationControls.add(this, 'speed', 0, this.maxSpeed).step(1);
+            animationControls.add(this, 'next');
+            animationControls.add(this, 'prev');
 
             this.gui = gui;
         },
-
-        /* Public */
 
         render: function() {
             if (this.stats) this.stats.begin();
@@ -126,7 +129,6 @@ var AbstractVisualization = Fiber.extend(function() {
 
         play: function() {
             if (!this.playing) {
-                this._enableController('speed');
                 this._enableController('pause');
                 this._player();
                 this.playing = true;
@@ -140,7 +142,6 @@ var AbstractVisualization = Fiber.extend(function() {
             clearTimeout(this.timer);
             this.playing = false;
             this._changeControllerText("play", "play");
-            this._disableController('speed');
         },
 
         /* Private */
@@ -157,10 +158,12 @@ var AbstractVisualization = Fiber.extend(function() {
         },
 
         _changeControllerText: function(name, label) {
-            for (var i = 0; i < this.gui.__controllers.length; i++) {
-                if (this.gui.__controllers[i].property === name) {
-                    this.gui.__controllers[i].name(label);
-                }
+            var controller = this._findController(name);
+            if(controller) {
+                controller.name(label);
+                return controller.property;
+            } else {
+                return false;
             }
         },
 
@@ -169,15 +172,34 @@ var AbstractVisualization = Fiber.extend(function() {
         },
 
         _findController: function(controllerName) {
-            for (var i = 0; i < this.gui.__controllers.length; i++) {
-                var controller = this.gui.__controllers[i];
+            // first we look in the top level
+            var controller = this._findControllerHelper(this.gui, controllerName);
+            if (controller) {
+                return controller;
+            // then the folders
+            } else {
+                for (folder in this.gui.__folders) {
+                    controller = this._findControllerHelper(this.gui.__folders[folder], controllerName);
+                    if (controller) {
+                        return controller;
+                    }
+                }
+            }
+            return null;
+        },
 
+        _findControllerHelper: function(obj, controllerName) {
+            for (var i = 0; i < obj.__controllers.length; i++) {
+                var controller = obj.__controllers[i];
                 if (controller.property === controllerName) {
                     return controller;
                 }
             }
-
             return null;
+        },
+
+        _findFolder: function(folderName) {
+            return (_.isUndefined(this.gui.__folders[folderName])) ? null : this.gui.__folders[folderName];
         },
 
         _disableController: function(controllerName) {
@@ -200,6 +222,13 @@ var AbstractVisualization = Fiber.extend(function() {
             if (!controller) return;
 
             $(controller.__li).addClass("hidden");
+        },
+
+        _hideFolder: function(folderName) {
+            var folder = this._findFolder(folderName);
+            if (!folder) return;
+
+            $(folder.__ul).addClass("hidden");
         },
 
         _initScene: function() {
@@ -305,5 +334,10 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this.iterationChanged(snapshot, lastSnapshot); // fire public event
         },
+
+        _updateFOV: function(value) {
+            this.camera.fov = value;
+            this.camera.updateProjectionMatrix();
+        }
     };
 });
