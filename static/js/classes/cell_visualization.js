@@ -13,7 +13,6 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
         getInputDrawing: function() {return null;},
         getOutputDrawing: function() {return null;},
         positionDrawings: function(inputDrawing, outputDrawing) {},
-        positionCamera: function() {},
 
         /* Public */
 
@@ -90,7 +89,7 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
             }
 
             if (inputDimensionsChanged || outputDimensionsChanged) {
-                this._redraw();
+                this.redraw();
             }
         },
 
@@ -158,6 +157,23 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
             }, snapshot));
         },
 
+        redraw: function() {
+            var inputDrawing = this.inputDrawing,
+                outputDrawing = this.outputDrawing,
+                scene = this.scene;
+
+            inputDrawing.clear();
+            inputDrawing.setup();
+
+            outputDrawing.clear();
+            outputDrawing.setup();
+
+            this.positionDrawings(inputDrawing, outputDrawing);
+
+            scene.add(outputDrawing.getObject3D());
+            scene.add(inputDrawing.getObject3D());
+        },
+
         /* Private */
 
         _initDrawings: function() {
@@ -183,25 +199,7 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
             inputDrawing.setRegionDimensions(inputDimensions, this.reshape);
             outputDrawing.setRegionDimensions(outputDimensions, this.reshape);
 
-            this._redraw();
-        },
-
-        _redraw: function() {
-            var inputDrawing = this.inputDrawing,
-                outputDrawing = this.outputDrawing,
-                scene = this.scene;
-
-            inputDrawing.clear();
-            inputDrawing.setup();
-
-            outputDrawing.clear();
-            outputDrawing.setup();
-
-            this.positionDrawings(inputDrawing, outputDrawing);
-
-            scene.add(outputDrawing.getObject3D());
-            scene.add(inputDrawing.getObject3D());
-            this.positionCamera();
+            this.redraw();
         },
 
         _calculateCameraDistance: function(axis) {

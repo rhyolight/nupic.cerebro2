@@ -6,20 +6,6 @@ var ThreeDCellVisualization = CellVisualization.extend(function(base) {
             return renderer;
         },
 
-        initCamera: function(width, height) {
-            var camera = base.initCamera.call(this, width, height);
-
-            camera.position.set(2000, 2000, 500);
-            camera.lookAt(0, 0, 0);
-            camera.up.set(0, 0, 1);
-
-            return camera;
-        },
-        
-        positionCamera: function() {
-            this.viewDefault();
-        },
-
         initGUI: function() {
             base.initGUI.call(this);
 
@@ -64,6 +50,12 @@ var ThreeDCellVisualization = CellVisualization.extend(function(base) {
 
             inputObject3D.position.z = -(total / 4 + padding);
             outputObject3D.position.z = (total / 4 + padding);
+        },
+
+        redraw: function() {
+            base.redraw.call(this);
+
+            this.viewDefault();
         },
     };
 });
