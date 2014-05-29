@@ -16,6 +16,15 @@ var CellVisualization = AbstractVisualization.extend(function(base) {
 
         /* Public */
 
+        initGUI: function() {
+            base.initGUI.call(this);
+
+            var gui = this.gui;
+
+            var reshapeUpdated = _.bind(this._reshapeUpdated , this);
+            gui.add(this, 'reshape').onChange(reshapeUpdated);
+        },
+
         viewDefault: function() {
             var x = this._calculateCameraDistance("x");
             this.camera.position.set(-x,-x,(x/4));

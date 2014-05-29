@@ -73,9 +73,6 @@ var AbstractVisualization = Fiber.extend(function() {
 
             this.guiIteration = gui.add(this, 'iteration', 0, 0).step(1).listen();
 
-            var reshapeUpdated = _.bind(this._reshapeUpdated , this);
-            gui.add(this, 'reshape').onChange(reshapeUpdated);
-
             var animationControls = gui.addFolder('Animation');
             animationControls.add(this, 'play');
             animationControls.add(this, 'speed', 0, this.maxSpeed).step(1);
