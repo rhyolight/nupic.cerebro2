@@ -46,7 +46,7 @@ var ThreeDCellDrawing = CellDrawing.extend(function(base) {
                 material = new THREE.ParticleBasicMaterial({
                     size: 80,
                     map: THREE.ImageUtils.loadTexture(
-                        "img/particle.png"
+                        "/img/particle.png"
                     ),
                     blending: THREE.NormalBlending,
                     transparent: true,
