@@ -48,7 +48,12 @@ var AbstractVisualization = Fiber.extend(function() {
         /* Public */
 
         initRenderer: function() {
-            return new THREE.WebGLRenderer();
+            var renderer = new THREE.WebGLRenderer({
+                // NOTE: uncomment below enable screenshots
+                // preserveDrawingBuffer: true
+            });
+            THREEx.Screenshot.bindKey(renderer);
+            return renderer;
         },
 
         initCamera: function(width, height) {
