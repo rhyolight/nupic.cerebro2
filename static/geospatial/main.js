@@ -1,13 +1,14 @@
 /* Main */
 
 var loadDelay = intParam('loadDelay') || 0,
-    modelURL = strParam('modelURL') || defaultModelURL();
+    modelURL = strParam('modelURL') || defaultModelURL(),
+    encoderName = strParam('encoderName') || "coordinate";
 
 var container = $('#container');
 
 var model = new NetworkReadonlyModel(modelURL),
     history = new History(),
-    visualization = new FakeGeospatialCoordinateEncoderVisualization(container, history, "coordinate");
+    visualization = new FakeGeospatialCoordinateEncoderVisualization(container, history, encoderName);
 
 visualization.loadDelay = loadDelay;
 visualization.render();
