@@ -28,7 +28,7 @@ var FakeGeospatialCoordinateEncoderVisualization = CoordinateEncoderVisualizatio
             var img = new THREE.MeshBasicMaterial({
                 map: THREE.ImageUtils.loadTexture('map.png'),
                 transparent: true,
-                opacity: 0.3
+                opacity: 0.5
             });
             img.map.needsUpdate = true;
 
