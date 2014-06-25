@@ -1,6 +1,6 @@
 # Cerebro 2
 
-A visualization and platform for NuPIC.
+A web-based visualization and debugging platform for NuPIC.
 
 ## Usage
 
