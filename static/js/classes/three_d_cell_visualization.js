@@ -40,7 +40,7 @@ var ThreeDCellVisualization = CellVisualization.extend(function(base) {
         },
 
         positionDrawings: function(inputDrawing, outputDrawing) {
-            var padding = 100;
+            var padding = 500;
 
             var inputObject3D = inputDrawing.getObject3D(),
                 outputObject3D = outputDrawing.getObject3D();
